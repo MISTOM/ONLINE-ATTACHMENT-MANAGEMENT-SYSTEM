@@ -24,7 +24,8 @@
     <link rel="stylesheet" href="/stylesheets/style.css">
   </head>
   
-  <body class="bg-light">
+  <div class="overlay"></div>
+  <body class="bg-light bgImg">
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
       <a class="navbar-brand" href="#">G_L</a>
       <h3 class=" title">GET_LETTER</h3>
@@ -42,23 +43,23 @@
         </ul>
       </div> 
     </nav>
-
     <div class="whole">
     <div class="container">
       <form action="/authentication" method="POST" class="needs-validation" novalidate>
-        <h3 class="display-4"><%= title%></h3>
+        <h3 class="display-4 text-light"><%= title%></h3>
+        <hr style="margin-top: -10px;">
         <div class="form-group">
-          <label for="username">Username:</label>
-          <input type="text" name="username" id="uname" class="form-control form-control-lg" placeholder="TOM DOE" required>
+          <label for="username" class="text-light" >Username:</label>
+          <input type="text" name="username" id="uname" class="form-control form-control-lg" placeholder="Username..." required value="<%=  %>">
           <div class="valid-feedback">OK</div>          
-          <div class="invalid-feedback">Please enter your Username</div>
+          <div class="invalid-feedback">Weka Username bana!!</div>
         </div>
         
         <div class="form-group">
-          <label for="pwd">Password:</label>
-          <input type="password" name="password" id="pwd" class="form-control form-control-lg" placeholder="Enter Password" required>
+          <label for="pwd" class="text-light">Password:</label>
+          <input type="password" name="password" id="pwd" class="form-control form-control-lg" placeholder="Password..." required>
           <div class="valid-feedback">OK</div>          
-          <div class="invalid-feedback"> Please enter your password</div>
+          <div class="invalid-feedback">sasa unaachia password nani</div>
 
         </div>
         <input type="submit" class="btn btn-md btn-dark" value="login" >

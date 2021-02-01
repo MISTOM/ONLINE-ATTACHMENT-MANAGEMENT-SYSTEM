@@ -6,17 +6,40 @@
 a {
   color: #00B7FF;
 } */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap');
+.bgImg{
+  background-image: url('../images/books.jpg');
+  object-fit: cover;
+}
+
+.overlay{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 75%;
+  height: 100%;
+  left: 50%;
+  transform: skew(15deg) translateX(-50%);
+  background:linear-gradient(312deg, #18993f 30%,#b0cc82 70%);
+  opacity: 0.7;
+  mix-blend-mode:darken;
+  transition: 200ms;
+
+}
 
 .whole {
+  position: relative;
   width: 560px;
   margin: 50px auto;
   height: 386px;
   padding: 30px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   border-radius: 10px;
+  z-index: 400;
 
   background-color:rgb(255,255,255);
-  background:linear-gradient(312deg, rgba(255,255,255,1) -9%, rgba(143,175,149,1) 48%, rgba(9,121,44,0.5158438375350141) 77%);
+  background:linear-gradient(312deg, rgba(255,255,255,0.7) -9%, rgb(139, 179, 147) 30%, rgba(9,121,44,0.9) 77%);
+  transition: 350ms;
 }
 @media screen and (max-width: 576px) {
   .whole{
@@ -26,6 +49,18 @@ a {
     font-size: 2.5rem;
     text-align: center;
   }
+
+}
+@media screen and (max-width: 980px) {
+  .overlay{
+    transform: skew(0deg) translateX(0%);
+    left: 0%;
+    width: 100%;
+  }
+
+}
+label, input{
+  font-family: 'IBM Plex Mono', sans-serif;
 }
 
 nav{

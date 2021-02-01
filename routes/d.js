@@ -7,13 +7,13 @@ const { check, validationResult, matchedData } = require("express-validator");
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('d', {
-     title: 'LOGIN',
-     email: '',
-     password: ''
- });
-});
+// router.get('/', function(req, res, next) {
+//   res.render('d', {
+//      title: 'LOGIN',
+//      email: '',
+//      password: ''
+//  });
+// });
 
 // router.post('/authentication', (req, res, next)=>{
 //   console.log(req.body.username);

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const conn = require('../lib/db');
-// const flash = require('express-flash');
+const flash = require('express-flash');
 
 const { check, validationResult, matchedData } = require("express-validator");
 
@@ -12,7 +12,6 @@ router.get('/', function(req, res, next) {
      title: 'LOGIN',
      email: '',
      password: ''
-     
  });
 });
 
@@ -40,7 +39,11 @@ conn.query('SELECT * FROM persons WHERE username = ? AND password = ?', [usernam
 
   if(rows.length <= 0){
     console.log('login failed')
-    res.redirect('/');
+
+     res.redirect('/', +req.body.username, {
+      data: req.body,
+      errors:errors
+    });
     // req.flash('error!','Please enter correct email and password!')
   }else{
     console.log('logged is success');
