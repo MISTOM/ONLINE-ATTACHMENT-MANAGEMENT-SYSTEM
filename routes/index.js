@@ -1,12 +1,13 @@
 const express = require('express');
-const router = express.Router();
+
 const conn = require('../lib/db');
-const flash = require('express-flash');
+// const flash = require('express-flash');
+const passport = require('passport');
+const passportLocal= require("passport-local")
 
-const { check, validationResult, matchedData } = require("express-validator");
+const router = express.Router();
 
-
-/* GET home page. */
+/*-----------------------------------ROUTES-- */
 router.get('/', function(req, res, next) {
   res.render('index', {
      title: 'LOGIN',
@@ -15,41 +16,60 @@ router.get('/', function(req, res, next) {
  });
 });
 
-router.post('/authentication', (req, res, next)=>{
-  console.log(req.body.username);
-  const errors = validationResult(req)
-  if(!errors.isEmpty()){
-    return res.render('index',{
-      title: 'LOGIN',
-      data: req.body,
-      errors: errors.mapped()
+
+///////////////////LOGIN AUTH//////////////////////////
+let LocalStrategy= passportLocal.Strategy;
+
+router.post('/authentication', passport.authenticate('local',{
+    successRedirect:'/d',
+    failureRedirect:'/',
+    successFlash: true,
+    failureFlash: true
+
+  })
+);
+
+//------------------------PASSPORT CONFIG---
+passport.use(new LocalStrategy({
+
+  usernameField : 'username',
+  passwordField : 'password',
+  // passReqToCallback : true //pass to cb
+},
+  function(username, password, done) { // callback with username and password from the form
+
+   conn.query("SELECT * FROM persons WHERE username =?", username ,function(err,rows){
+      if (err) return done(err);
+      if (!rows.length) {
+          return done(null, false, {error: 'No user found.'});   
+      } 
+//         |||///////////////USER FOUND WRONG PASSWORD///////////////////
+      if (!( rows[0].password == password)){
+        return done(null, false, {error:  'Oops! Wrong password.'});
+      }else{
+        console.log("rows param from conn query ",rows[0]);
+        return done(null, rows[0]);
+      }			
     });
-  }
-  const data = req.body;
-  console.log("the data:", data);
+}));
 
-  ////////////////DATAS/////////
-  const username = data.username;
-  const password = data.password;
-
-  ////////////////QUERY////////
-conn.query('SELECT * FROM persons WHERE username = ? AND password = ?', [username, password], (err, rows, fields)=>{
-  if(err) throw err;
-  console.log('here are the fields and rows',fields);
-
-  if(rows.length <= 0){
-    console.log('login failed')
-
-     res.redirect('/', +req.body.username, {
-      data: req.body,
-      errors:errors
-    });
-    // req.flash('error!','Please enter correct email and password!')
-  }else{
-    console.log('logged is success');
-    res.render('d', {NAME:username})
-  }
+passport.serializeUser( (user, done)=>{
+console.log("user here",user);
+  done(null, user.user_id );
 
 });
-})
+
+passport.deserializeUser(function(id, done){
+
+  conn.query("SELECT * FROM persons WHERE user_id =?",id, function (err, rows){
+
+      done(err, rows[0]);
+  });
+});
+
+
+
+
+
+
 module.exports = router;
