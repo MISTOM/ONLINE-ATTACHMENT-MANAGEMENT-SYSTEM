@@ -1,21 +1,54 @@
+
+
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <link rel="stylesheet" href="/stylesheets/style.css">
-        <script src="https://kit.fontawesome.com/4f1c9d79dd.js" crossorigin="anonymous"></script>
-    </head>
-    <body>
-        <div class="jumbotron">
-        <h3> hello <%= NAMEofADMIN%></h3>
-        </div>   
-        <p>this is the admin page</p>
-        
-        <script src="/javascripts/script.js" async defer></script>
-    </body>
+<html lang="en">
+  <head>
+    <title>GET_LETTER</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <script src="https://kit.fontawesome.com/4f1c9d79dd.js" crossorigin="anonymous"></script>
+  </head>
+  
+  <body class="bg-light">
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+      <a class="navbar-brand" href="#">G_L</a>
+      <h3 class=" title">GET_LETTER</h3>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#">JKUAT</a>
+          </li>   
+        </ul>
+      </div> 
+    </nav>
+    <section class="board">
+    <header>
+      <em class="icon"></em>
+      <h3><%= NAMEofADMIN%></h3>
+    </header>
+      <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Perferendis, nobis ullam eum corporis dolor eius aliquid obcaecati officia inventore accusamus, impedit ducimus, sapiente voluptatem? Dolore, animi. Temporibus dolorum dolore reiciendis!</p>
+    </section>
+    <div class="menu">
+      <ul>
+          <li><a class="item" href="">Home</a></li>
+          <li><a class="item" href="#">E-LOG</a></li>
+          <li><a class="item" href="#">FAQ</a></li>
+          <li><a class="item" href="/">LOGOUT</a></li>
+      </ul>
+      </div>
+
+
+
+    <script src="/javascripts/script.js" async defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
 </html>
