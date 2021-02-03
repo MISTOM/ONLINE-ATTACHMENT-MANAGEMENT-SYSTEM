@@ -29,7 +29,7 @@ app.use(
   session({
     name: "tomSess",
     secret: "80808080",
-    resave: true,
+    resave: false,
     saveUninitialized: true,
     cookie: { maxAge: 60000 },
   })

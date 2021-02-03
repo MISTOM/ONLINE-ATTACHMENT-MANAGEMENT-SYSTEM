@@ -6,13 +6,13 @@
 a {
   color: #00B7FF;
 } */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap');
-.bgImg{
-  background-image: url('../images/books.jpg');
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap");
+.bgImg {
+  background-image: url("../images/books.jpg");
   object-fit: cover;
 }
 
-.overlay{
+.overlay {
   position: absolute;
   left: 0;
   top: 0;
@@ -20,11 +20,10 @@ a {
   height: 100%;
   left: 50%;
   transform: skew(15deg) translateX(-50%);
-  background:linear-gradient(312deg, #18993f 30%,#b0cc82 70%);
+  background: linear-gradient(312deg, #18993f 30%, #b0cc82 70%);
   opacity: 0.7;
-  mix-blend-mode:darken;
+  mix-blend-mode: darken;
   transition: 200ms;
-
 }
 
 .whole {
@@ -37,53 +36,60 @@ a {
   border-radius: 10px;
   z-index: 400;
 
-  background-color:rgb(255,255,255);
-  background:linear-gradient(312deg, rgba(255,255,255,0.7) -9%, rgb(139, 179, 147) 30%, rgba(9,121,44,0.9) 77%);
+  background-color: rgb(255, 255, 255);
+  background: linear-gradient(
+    312deg,
+    rgba(255, 255, 255, 0.7) -9%,
+    rgb(139, 179, 147) 30%,
+    rgba(9, 121, 44, 0.9) 77%
+  );
   transition: 350ms;
 }
 @media screen and (max-width: 576px) {
-  .whole{
-    width:400px;
+  .whole {
+    width: 400px;
   }
-  .display-4{
+  .display-4 {
     font-size: 2.5rem;
     text-align: center;
   }
-
 }
 @media screen and (max-width: 980px) {
-  .overlay{
+  .overlay {
     transform: skew(0deg) translateX(0%);
     left: 0%;
     width: 100%;
   }
-
 }
-label, input{
-  font-family: 'IBM Plex Mono', sans-serif;
+label,
+input {
+  font-family: "IBM Plex Mono", sans-serif;
 }
 
-nav{
+nav {
   z-index: 1000;
 }
-header{
+header {
   position: absolute;
   top: 10px;
   left: 0;
   width: 100%;
-  padding:40px 80px;
+  padding: 40px 80px 0 80px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   color: #ddd;
   z-index: 500;
 }
-.board{
+header h3 {
+  padding-top: 4px;
+}
+.board {
   position: absolute;
   top: 0;
   left: 0;
-  padding: 100px;
-  display:flex;
+  /* padding: 50px; */
+  display: flex;
   justify-content: space-between;
   width: 100%;
   min-height: 100vh;
@@ -93,16 +99,16 @@ header{
   z-index: 200;
   transition: 0.5s;
 }
-.board.active{
-  left:200px;
+.board.active {
+  left: 200px;
 }
 
-.icon::after{
+.icon::after {
   font-family: "Font Awesome 5 Free";
   font-weight: 900;
   content: "\f0c9";
   cursor: pointer;
-  display: inline-block ;
+  display: inline-block;
   font-style: normal;
   font-variant: normal;
   text-rendering: auto;
@@ -114,29 +120,22 @@ header{
   content: "\f00d";
 }
 
-
-
-
-.title{
-  letter-spacing: 2px; 
+.title {
+  letter-spacing: 2px;
   transition: 200ms;
   cursor: pointer;
   color: rgb(8, 167, 8);
 }
 
-.title:hover{
+.title:hover {
   letter-spacing: 3px;
 }
 
-form{
+form {
   border-color: red;
 }
-.container{
-  max-width: 500px;
-}
 
-
-.menu{
+.menu {
   position: relative;
   left: 0;
   top: 0;
@@ -148,16 +147,41 @@ form{
   background-color: rgba(6, 61, 6, 0.466);
 }
 
-.menu ul li{
+.menu ul li {
   list-style: none;
   margin: 15px 0 15px -30px;
 }
-.menu ul li a{
+.menu ul li a {
   font-size: 25px;
   text-decoration: none;
   color: #222222;
   transition: 0.2s;
 }
-.menu ul li a:hover{
+.menu ul li a:hover {
   color: #2d7e17;
+}
+/*------------------------------------------------------------------*/
+
+.approve::after {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 400;
+  content: "\f14a";
+  cursor: pointer;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+.disApprove::after {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 400;
+  font-size: 0.9em;
+  content: "\f057";
+  cursor: pointer;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
 }
