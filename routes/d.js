@@ -3,47 +3,42 @@ const router = express.Router();
 const conn = require("../lib/db.js");
 // const flash = require('express-flash');
 
-function isAdmin(req, res, next) {
-  if (req.user.is_admin) {
-    console.log("rendering admin view........");
-    res.redirect("/d/admin");
-  } else {
-    return next();
+function control(req, res, next) {
+  if(req.user == "undefined" || req.user == undefined){
+    res.redirect('/');
+  }else{
+    if (req.user.is_admin) {
+      return next();
+    } else {
+      res.redirect('/d');
+    }
   }
 }
 
-// function reqProcess(req, res, next) {
-//   console.log("request process running......");
-//   if (req.user.is_requested) {
-//     //already requested
-//   } else if (req.user.is_approved) {
-//     //user is already approved no need
-//   } else if (req.user.is_attached) {
-//     //user is already attached
-//   } else {
-//     return conn.query(
-//       `UPDATE persons SET is_requested = 1 WHERE user_id = ${req.user.user_id}`
-//     );
-//   }
-//   next();
-// }
-
 //------------------ROUTES--------------------
-router.get("/", isAdmin, (req, res, next) => {
-  console.log("donnnnnnne");
-  res.render("d", {
-    NAME: req.user.f_name,
-  });
+router.get("/", (req, res, next) => {
+  if(req.user == "undefined" || req.user == undefined){
+    res.redirect('/');
+  }else{
+    if (req.user.is_admin) {
+      res.redirect('/d/admin');
+    } else {
+      console.log("donnnnnnne");
+      res.render("d", {
+        NAME: req.user.f_name,
+      });
+    }
+  }
 });
 
-router.get("/admin", (req, res, next) => {
-  console.log("In Admin");
+router.get("/admin", control, (req, res, next) => {
+  console.log("In Admin=================", req.session);
   conn.query(`SELECT * FROM persons`, (err, rows) => {
     if (err) throw err;
     if (!rows.length) {
       console.log("no user---------");
     } else {
-      console.log("the actual-----------", rows);
+      // console.log("the actual-----------", rows);
       res.render("admin", {
         NAMEofADMIN: req.user.f_name,
         data: rows,
@@ -67,4 +62,9 @@ router.get("/admin/approve/(:id)", (req, res, next) => {
   );
 });
 
+router.get("/logout", (req, res, next)=>{
+  req.session.destroy();
+  req.logout();
+  res.redirect('/');
+})
 module.exports = router;
