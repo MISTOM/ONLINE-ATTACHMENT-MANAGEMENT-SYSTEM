@@ -10,7 +10,7 @@
     <div class="">
       <nav class="navbar navbar-expand-sm navbar-dark green darken-4">
         <a class="navbar-brand" href="#"><strong>G-L</strong></a>
-          <a class="text-light" href="#"><strong>GET_LETTER</strong></a>
+          <a class="text-light" href="/"><strong>GET_LETTER</strong></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-6"
           aria-controls="navbarSupportedContent-6" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -19,14 +19,11 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent-6">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link" href="/">LOGIN<span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="#">JKUAT</a>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-6" data-toggle="dropdown" aria-haspopup="false"
-                aria-expanded="false">Dropdown </a>
+              <a class="nav-link dropdown-toggle disabled" id="navbarDropdownMenuLink-6" data-toggle="dropdown" aria-haspopup="false"
+                aria-expanded="false" >USER </a>
               <div class="dropdown-menu dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-6">
                 <a class="dropdown-item" href="#">Action</a>
                 <a class="dropdown-item" href="#">FAQ'S</a>
@@ -38,6 +35,11 @@
     </div>
     <div class="whole">
     <div class="container">
+      <h1><%= messages %></h1>
+      <% if (messages.length > 0) { %>
+        <div class="alert alert-danger"><%= messages %></div>
+    <% } %>
+  
       <form action="/authentication" method="POST" class="needs-validation" novalidate>
         <h3 class="display-4 text-light"><%= title%></h3>
         <hr style="margin-top: -10px;">

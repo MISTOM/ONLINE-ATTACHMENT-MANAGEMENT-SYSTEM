@@ -18,9 +18,6 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent-6">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-          <a class="nav-link" href="#">LOGIN<span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" href="#">JKUAT</a>
         </li>
         <li class="nav-item dropdown">
@@ -49,14 +46,44 @@
     </header>
 
     <main class="row">
-      <aside class="col-md-6">
-        <!-- to fill -->
+      <aside class="col-lg-6">
+          <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque, repellendus? Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam, nostrum distinctio blanditiis beatae tempora sed asperiores fugiat odit dolorem. Ipsam pariatur sint eveniet doloremque veritatis veniam ipsa, recusandae ipsum asperiores.</p>
+          <hr>
       </aside>
-      <aside class="col-md-6">
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quaerat placeat assumenda ad fugit aliquam consectetur exercitationem porro dicta sint quisquam.</p>
-        <button class="btn btn-sm btn-outline-light">Request</button>
-        <button class="btn btn-sm btn-outline-light" disabled>pending..</button>
-        <button class="btn btn-sm btn-outline-light">Requested</button>
+      <aside class="col-lg-6">
+        <form action="/attachfrm" method="POST" enctype="multipart/form-data">
+          <h4>Please fill in the form and attach the letter from institution below.</h4>
+            <div class="form-group">
+              <input type="text" name="intitution" id="instit" class="form-control" required />
+              <label class="form-label" for="instit">Name of Institution attached</label>
+            </div>
+
+            <div class="form-group">
+              <input type="text" name="position" id="posit" class="form-control" required/>
+              <label class="form-label" for="posit">Work Position </label>
+            </div>
+
+            <div class="row">
+              <div class="form-group mb-4 col-md-4">
+                <input type="date" name="startDate" id="sDate" class="form-control" required/>
+                <label class="form-label" for="sDate">Start Date</label>
+              </div>
+              <div class="form-group mb-4 col-md-4">
+                <input type="date" name="endDate" id="eDate" class="form-control" />
+                <label class="form-label" for="eDate">End Date</label>
+              </div>
+              <div class=" mb-4 col-md-4">
+                <input class="form-control" type="file" id="file"  />
+                <label class="form-label" for="file" >Upload the letter</label>
+              </div>
+            </div>
+          
+            <div class="form-group mb-4">
+             <textarea class="form-control" name="moreInfo" id="txtArea" placeholder="optional..."></textarea> 
+              <label class="form-label" for="txtArea">Additional Information</label>
+            </div>
+            <button type="submit" class="btn btn-sm green btn-block mb-4">Submit</button>
+          </form>
       </aside>
     </main>
   </section></div>

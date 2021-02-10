@@ -6,9 +6,7 @@ const logger = require("morgan");
 const bodyParser = require("body-parser");
 const flash = require("connect-flash");
 const session = require("express-session");
-
-const indexRouter = require("./routes/index");
-const d = require("./routes/d");
+const expressMessages = require("express-messages")
 
 const passport = require("passport");
 //EXPRESS INIT
@@ -29,21 +27,23 @@ app.use(
   session({
     name: "tomSess",
     secret: "80808080",
-    resave: false,
+    resave: true,
     saveUninitialized: true,
-    cookie: { maxAge: 60000 },
+    cookie: { maxAge: 3600000 }//one hr
   })
-);
+  );
 
-app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
-//==============================//
-// app.use((req, res, next)=>{
-//   console.log(req.user);
-//   next();
-// })
+app.use(function(req, res, next){
+  res.locals.message = expressMessages;
+  next();
+});
+const indexRouter = require("./routes/index");
+const d = require("./routes/d");
+
 
 app.use("/", indexRouter);
 app.use("/d", d);

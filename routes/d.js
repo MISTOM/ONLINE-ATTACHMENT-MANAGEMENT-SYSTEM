@@ -46,7 +46,7 @@ router.get("/admin", control, (req, res, next) => {
     }
   });
 });
-
+=== 
 router.get("/admin/approve/(:id)", (req, res, next) => {
   console.log("updating////////");
   conn.query(
@@ -63,8 +63,9 @@ router.get("/admin/approve/(:id)", (req, res, next) => {
 });
 
 router.get("/logout", (req, res, next)=>{
-  req.session.destroy();
-  req.logout();
-  res.redirect('/');
+  req.session.destroy(()=>{
+    req.logOut();
+    res.redirect('/');
+  });
 })
 module.exports = router;

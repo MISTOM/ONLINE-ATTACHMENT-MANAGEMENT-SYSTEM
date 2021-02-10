@@ -1,7 +1,6 @@
 const express = require("express");
 
 const conn = require("../lib/db");
-// const flash = require('express-flash');
 const passport = require("passport");
 const passportLocal = require("passport-local");
 
@@ -13,7 +12,7 @@ function control(req, res, next) {
     return next()
   }else{
     if (req.user.is_admin) {
-      res.redirect('/d/admin');
+      res.redirect('/d/admin'); 
     } else {
       res.redirect('/d');
     }
@@ -25,7 +24,8 @@ function control(req, res, next) {
 /*-----------------------------------ROUTES-- */
 router.get("/",control, function (req, res, next) {
   res.render("index", {
-    title: "LOGIN"
+    title: "LOGIN",
+    messages: req.flash('loginMessage')
   });
 });
 
@@ -39,6 +39,7 @@ router.post(
     failureRedirect: "/",
     successFlash: true,
     failureFlash: true,
+    passReqToCallback : true
   })
 );
 
@@ -57,11 +58,11 @@ passport.use(
         function (err, rows) {
           if (err) return done(err);
           if (!rows.length) {
-            return done(null, false, { error: "No user found." });
+            return done(null, false, { message: "No user found." });
           }
           //         |||///////////////USER FOUND WRONG PASSWORD///////////////////
           if (!(rows[0].password == password)) {
-            return done(null, false, { error: "Oops! Wrong password." });
+            return done(null, false, { message: "Oops! Wrong password." });
           } else {
             return done(null, rows[0]);
           }
