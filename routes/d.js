@@ -3,6 +3,8 @@ const router = express.Router();
 const conn = require("../lib/db.js");
 // const flash = require('express-flash');
 
+const { dView, genPDF } = require("../controllers/dControll")
+
 function control(req, res, next) {
   if(req.user == "undefined" || req.user == undefined){
     res.redirect('/');
@@ -15,21 +17,13 @@ function control(req, res, next) {
   }
 }
 
+
+
+
+
 //------------------ROUTES--------------------
-router.get("/", (req, res, next) => {
-  if(req.user == "undefined" || req.user == undefined){
-    res.redirect('/');
-  }else{
-    if (req.user.is_admin) {
-      res.redirect('/d/admin');
-    } else {
-      console.log("donnnnnnne");
-      res.render("d", {
-        NAME: req.user.f_name,
-      });
-    }
-  }
-});
+router.get("/", dView);
+router.get("/generatePDF", genPDF)
 
 router.get("/admin", control, (req, res, next) => {
   console.log("In Admin=================", req.session);
@@ -46,7 +40,7 @@ router.get("/admin", control, (req, res, next) => {
     }
   });
 });
-=== 
+
 router.get("/admin/approve/(:id)", (req, res, next) => {
   console.log("updating////////");
   conn.query(

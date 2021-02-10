@@ -9,8 +9,8 @@ const session = require("express-session");
 const expressMessages = require("express-messages")
 
 const passport = require("passport");
-//EXPRESS INIT
 
+//EXPRESS INIT
 const app = express();
 
 // view engine setup
@@ -47,6 +47,9 @@ const d = require("./routes/d");
 
 app.use("/", indexRouter);
 app.use("/d", d);
+
+/**==pdf generation============================*/
+
 
 // catch 404//
 app.use(function (req, res, next) {
