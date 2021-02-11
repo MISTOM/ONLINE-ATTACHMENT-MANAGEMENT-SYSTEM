@@ -1,45 +1,31 @@
 const express = require("express");
 const router = express.Router();
 const conn = require("../lib/db.js");
+const path = require("path");
 // const flash = require('express-flash');
 
-const { dView, genPDF } = require("../controllers/dControll")
+const { dView, dAdmin, dForm } = require("../controllers/dControll")
+const { control } = require("../controllers/routeControll");
+const { check, validationResult, matchedData } = require("express-validator");
 
-function control(req, res, next) {
-  if(req.user == "undefined" || req.user == undefined){
-    res.redirect('/');
-  }else{
-    if (req.user.is_admin) {
-      return next();
-    } else {
-      res.redirect('/d');
-    }
+//==============================MULTER CONFIGURATION===================
+
+const multer  = require('multer')
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, req.user.f_name+ '_' +req.user.user_id+ '_' +Date.now()+ '-' + path.extname(file.originalname))
   }
-}
-
-
-
+})
+const upload = multer({storage: storage})
 
 
 //------------------ROUTES--------------------
 router.get("/", dView);
-router.get("/generatePDF", genPDF)
-
-router.get("/admin", control, (req, res, next) => {
-  console.log("In Admin=================", req.session);
-  conn.query(`SELECT * FROM persons`, (err, rows) => {
-    if (err) throw err;
-    if (!rows.length) {
-      console.log("no user---------");
-    } else {
-      // console.log("the actual-----------", rows);
-      res.render("admin", {
-        NAMEofADMIN: req.user.f_name,
-        data: rows,
-      });
-    }
-  });
-});
+router.get("/dForm", dForm)
+router.get("/admin", control, dAdmin);
 
 router.get("/admin/approve/(:id)", (req, res, next) => {
   console.log("updating////////");
@@ -55,6 +41,41 @@ router.get("/admin/approve/(:id)", (req, res, next) => {
     }
   );
 });
+
+router.post('/attachfrm', (req, res) => {
+    upload.single('attachFile')(req, res, (error)=>{
+      if(error){
+        res.render("dForm", {
+          msg:error
+        });
+      }else{
+        console.log('the request body', req.body);
+        console.log('heres the request.file',req.file);
+        res.send("uploaded")
+      }
+    })
+  }
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 router.get("/logout", (req, res, next)=>{
   req.session.destroy(()=>{

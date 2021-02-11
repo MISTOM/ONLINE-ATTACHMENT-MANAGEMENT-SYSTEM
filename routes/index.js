@@ -3,6 +3,7 @@ const express = require("express");
 const conn = require("../lib/db");
 const passport = require("passport");
 const passportLocal = require("passport-local");
+// const { control } = require("../controllers/routeControll");
 
 const router = express.Router();
 
@@ -18,7 +19,6 @@ function control(req, res, next) {
     }
   }
 }
-
 //______________________________________________________________________
 
 /*-----------------------------------ROUTES-- */
@@ -29,11 +29,10 @@ router.get("/",control, function (req, res, next) {
   });
 });
 
-///////////////////LOGIN AUTH//////////////////////////
+/*----------------------------------------LOGIN AUTH----------------------- */
 let LocalStrategy = passportLocal.Strategy;
 
-router.post(
-  "/authentication",
+router.post("/authentication",
   passport.authenticate("local", {
     successRedirect: "/d",
     failureRedirect: "/",
@@ -51,7 +50,7 @@ passport.use(
       passwordField: "password",
       // passReqToCallback : true //pass to cb
     },
-    function (username, password, done) {
+    (username, password, done) => {
       // callback with username and password from the form
 
       conn.query("SELECT * FROM persons WHERE username =?",username,

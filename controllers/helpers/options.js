@@ -1,17 +1,16 @@
 module.exports = {
     format: "A4",
     orientation: "portrait",
-    border: "10mm",
+    border: "5mm",
     header: {
-        height: "45mm",
+        height: "10mm",
         contents: '<div style="text-align: center;">ATTACHMENT LETTER</div>'
     },
     footer: {
-        height: "28mm",
+        height: "20mm",
         contents: {
-        first: 'Cover page',
-        2: 'Second page', // Any page number is working. 1-based index
-        default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
-        last: 'Last Page'
-    }
+        default: '<footer class="center"><small>JKUAT is ISO 9001:2015 and ISO 14001:2025 Certified &#169; <br>Setting Trends is Higher Education, Research, Innovations and Enterprenureship</small></footer>', // fallback value
+    },
+    type: "pdf",
+    timeout: 60000
 }}

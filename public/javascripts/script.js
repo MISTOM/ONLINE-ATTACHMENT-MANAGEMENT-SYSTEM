@@ -3,9 +3,7 @@ const board = document.querySelector(".board");
 const board2 = document.querySelector(".board2");
 const menu = document.querySelector(".menu");
 const header = document.querySelector("header");
-
 // const inputs = document.querySelectorAll(".form-control");
-
 toggle.addEventListener("click", ()=>{
     toggle.classList.toggle("active");
     menu.classList.toggle("active");
