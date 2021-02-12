@@ -16,9 +16,6 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent-6">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-          <a class="nav-link" href="#">LOGIN<span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" href="#">JKUAT</a>
         </li>
         <li class="nav-item dropdown">
@@ -35,10 +32,10 @@
   </div>
   <div class="menu">
     <ul>
-        <li><a class="item" href="">Home</a></li>
+        <li><a class="item" href="/dashboard">Home</a></li>
         <li><a class="item" href="#">E-LOG</a></li>
         <li><a class="item" href="#">FAQ</a></li>
-        <li><a class="item" href="/d/logout">LOGOUT</a></li>
+        <li><a class="item" href="/dashboard/logout">LOGOUT</a></li>
     </ul>
     </div>
   <section class="container-fluid board">
@@ -46,8 +43,8 @@
       <em class="icon"></em>
     </header>
 
-    <main class="container justify-content-center">
-        <form action="/d/attachfrm" method="POST" enctype="multipart/form-data">
+    <main style="margin: auto;" class="container justify-content-center">
+        <form action="/dashboard/attachfrm" method="POST" enctype="multipart/form-data">
             <h4>Please fill in the form and attach the letter from institution below.</h4>
               <div class="form-group">
                 <input type="text" name="institution" id="institution" class="form-control" required />
@@ -60,17 +57,17 @@
               </div>
       
               <div class="row">
-                <div class="form-group mb-4 col-md-4">
+                <div class="form-group mb-4 col-lg-4">
                   <input type="date" name="startDate" id="startDate" class="form-control" required/>
                   <label class="form-label" for="sDate">Start Date</label>
                 </div>
-                <div class="form-group mb-4 col-md-4">
+                <div class="form-group mb-4 col-lg-4">
                   <input type="date" name="endDate" id="endDate" class="form-control" />
                   <label class="form-label" for="eDate">End Date</label>
                 </div>
                 <div class=" mb-4 col-md-4">
                   <input class="form-control" type="file" name="attachFile" id="attachFile"  />
-                  <label class="form-label" for="file" >Upload the letter</label>
+                  <label class="form-label" for="file" >Upload the letter</label><%= typeof msg !='undefined' ? msg: ''%>
                 </div>
               </div>
             

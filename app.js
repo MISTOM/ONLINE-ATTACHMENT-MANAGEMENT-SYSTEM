@@ -42,11 +42,11 @@ app.use(function(req, res, next){
   next();
 });
 const indexRouter = require("./routes/index");
-const d = require("./routes/d");
+const dashboard = require("./routes/dashboard");
 
 
 app.use("/", indexRouter);
-app.use("/d", d);
+app.use("/dashboard", dashboard);
 
 /**==pdf generation============================*/
 

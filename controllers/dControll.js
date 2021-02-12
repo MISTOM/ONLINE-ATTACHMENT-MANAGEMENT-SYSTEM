@@ -10,11 +10,11 @@ const dView = async (req, res, next) => {
       res.redirect('/');
     } else{
         if (req.user.is_admin) {
-            res.redirect('/d/admin');
+            res.redirect('/dashboard/admin');
         } else {
             console.log("rendering std dashboard...");
             let link = await genPDF(req,res,next);
-            res.render("d", {
+            res.render("dashboard", {
             NAME: req.user.f_name,
             link:link
             });
@@ -27,14 +27,14 @@ const dForm =(req, res, next) => {
     res.redirect('/');
   } else{
       if (req.user.is_admin) {
-          res.redirect('/d/admin');
+          res.redirect('/dashboard/admin');
       } else {
           console.log("rendering form dashboard...");
           res.render("dForm", {
           NAME: req.user.f_name,
           });
       };
-  };
+    };
 }
 const dAdmin =  async (req, res, next) => {
     console.log("In Admin=================", req.session);

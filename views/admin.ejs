@@ -40,7 +40,7 @@
       <li><a class="item" href="">Home</a></li>
       <li><a class="item" href="#">E-LOG</a></li>
       <li><a class="item" href="#">FAQ</a></li>
-      <li><a class="item" href="/d/logout">LOGOUT</a></li>
+      <li><a class="item" href="/dashboard/logout">LOGOUT</a></li>
   </ul>
 </div>
 
@@ -85,8 +85,8 @@
           <td>
             <% if(data[i].is_requested) { %>
               <div class="btn-group btn-group-sm">
-              <a href="/d/admin/approve/<%= data[i].user_id%>"><button type="button" class="btn btn-sm btn-success"><em class="approve"></em></button></a> 
-              <a href="/d/admin/disApprove/<%= data[i].user_id%>"><button type="button" class="btn btn-sm btn-warning"><em class="disApprove"></em></button></a>
+              <a href="/dashboard/admin/approve/<%= data[i].user_id%>"><button type="button" class="btn btn-sm btn-success"><em class="approve"></em></button></a> 
+              <a href="/dashboard/admin/disApprove/<%= data[i].user_id%>"><button type="button" class="btn btn-sm btn-warning"><em class="disApprove"></em></button></a>
               </div>
             <% }else if(data[i].is_approved) { %>
               <div class="btn-group btn-group-sm">

@@ -5,7 +5,7 @@ function control(req, res, next) {
       if (req.user.is_admin) {
         return next();
       } else {
-        res.redirect('/d');
+        res.redirect('/dashboard');
       }
     }
 }

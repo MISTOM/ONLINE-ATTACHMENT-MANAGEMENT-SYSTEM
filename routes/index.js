@@ -11,11 +11,11 @@ const router = express.Router();
 function control(req, res, next) {
   if(req.user == "undefined" || req.user == undefined){
     return next()
-  }else{
+  }else {
     if (req.user.is_admin) {
-      res.redirect('/d/admin'); 
+      res.redirect('/dashboard/admin'); 
     } else {
-      res.redirect('/d');
+      res.redirect('/dashboard');
     }
   }
 }
@@ -34,7 +34,7 @@ let LocalStrategy = passportLocal.Strategy;
 
 router.post("/authentication",
   passport.authenticate("local", {
-    successRedirect: "/d",
+    successRedirect: "/dashboard",
     failureRedirect: "/",
     successFlash: true,
     failureFlash: true,
@@ -72,7 +72,6 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  console.log("user here", user);
   done(null, user.user_id);
 });
 
