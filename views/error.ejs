@@ -1,9 +1,11 @@
 <%- include('./partials/_head') %>
-<body class=" container default-color">
+<body class=" container default-color ">
     
     <h1><%= message %></h1>
-    <h2 class="brown-text"><%= error.status %></h2>
+    <h2 class="brown-text display-3"><%= error.status %></h2>
     <pre><%= error.stack %></pre>
+    <a href="/" class="btn btn-sm btn-outline-dark">Go back</a>
+
 </body>
 
 <%- include('./partials/_foot'); %>

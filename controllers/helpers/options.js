@@ -4,7 +4,7 @@ module.exports = {
     border: "5mm",
     header: {
         height: "10mm",
-        contents: '<div style="text-align: center;">ATTACHMENT LETTER</div>'
+        contents: '<div style="text-align: center;"><hr></div>'
     },
     footer: {
         height: "20mm",

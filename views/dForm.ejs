@@ -15,16 +15,17 @@
     
     <div class="collapse navbar-collapse" id="navbarSupportedContent-6">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="#">JKUAT</a>
-        </li>
+       
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-6" data-toggle="dropdown" aria-haspopup="false"
-            aria-expanded="false"><%= NAME%></a>
+            aria-expanded="false"><%= user.first_name %> <%= user.last_name %></a>
           <div class="dropdown-menu dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-6">
             <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">FAQ'S</a> 
+            <a class="dropdown-item" href="/dashboard/logout">Logout</a> 
           </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">JKUAT</a>
         </li>
       </ul>
     </div>
@@ -34,8 +35,7 @@
     <ul>
         <li><a class="item" href="/dashboard">Home</a></li>
         <li><a class="item" href="#">E-LOG</a></li>
-        <li><a class="item" href="#">FAQ</a></li>
-        <li><a class="item" href="/dashboard/logout">LOGOUT</a></li>
+        <li><a class="item text-light" href="/dashboard/dForm">Submit</a></li>
     </ul>
     </div>
   <section class="container-fluid board">
@@ -43,40 +43,89 @@
       <em class="icon"></em>
     </header>
 
-    <main style="margin: auto;" class="container justify-content-center">
+    <main class="row">
+      <div class="container">
         <form action="/dashboard/attachfrm" method="POST" enctype="multipart/form-data">
-            <h4>Please fill in the form and attach the letter from institution below.</h4>
+        <% if(user.institution_id !== null){ %><h3 class="text-warning">Your details have already been subbmited.</h3> <% }else { %>
+          <h4>Please fill in the form and attach the letter from institution below.</h4><% } %>
+            <div class="form-group">
+              <input type="text" name="institution" id="institution" class="form-control" required />
+              <label class="form-label" for="institution">Name of Institution attached</label>
+            </div>   
+
+            <div class="form-group">
+              <input type="text" name="position" id="position" class="form-control" required/>
+              <label class="form-label" for="position">Department/Work Position </label>
+            </div>
+
+            <div class="form-group">
+              <input type="text" name="location" id="location" class="form-control" required/>
+              <label class="form-label" for="location">Location</label>
+            </div>
+    
+            <div class="row">
+              <div class="form-group col-lg-6">
+                <input type="date" name="startDate" id="startDate" class="form-control" required/>
+                <label class="form-label" for="startDate">Start Date</label>
+              </div>
+              <div class="form-group mb-4 col-lg-6">
+                <input type="date" name="endDate" id="endDate" class="form-control" />
+                <label class="form-label" for="endDate">End Date</label>
+              </div>
+            </div> 
+
+            <div class="row">
+              <div class=" form-group col-lg-4">
+                <input class="form-control" type="email" name="email" id="email" required />
+                <label class="form-label" for="email" >Institution email</label>
+              </div>
+
+              <div class=" form-group col-lg-4">
+                <input class="form-control" type="text" name="website" id="website"/>
+                <label class="form-label" for="website" >Institution Website</label>
+              </div>
+
+              <div class=" form-group col-lg-4">
+                <input class="form-control file" type="file" name="attachFile" id="attachFile"  required />
+                <label class="form-label" for="attachFile" >Upload Letter From Institution</label>                <%= typeof msg !='undefined' ? msg: ''%>
+              </div>
+              
+            </div>
+            <div class="row">
+              <div class="form-group col-lg-8">
+              <textarea class="form-control" name="moreInfo" id="moreInfo" placeholder="optional..."></textarea> 
+              <label class="form-label" for="txtArea">Additional Information</label>
+              </div>
+            </div>
+
+            <h4> Please Fill in Your Supervisors Details</h4>
+            <div class="col-xl-4">
+              
+              <input type="text" name="supFirstName" id="supFirstName" class="form-control form-control-sm" required />
+              <label class="form-label" for="supFirstName">First Name</label>
+          
+              <input type="text" name="supLastName" id="supLastName" class="form-control form-control-sm" required />
+              <label class="form-label" for="supLastName">Last Name</label>
+        
               <div class="form-group">
-                <input type="text" name="institution" id="institution" class="form-control" required />
-                <label class="form-label" for="instit">Name of Institution attached</label>
+              <input type="email" name="supEmail" id="supEmail" class="form-control form-control-sm" required />
+              <label class="form-label" for="supEmail">Email</label>
               </div>
-      
-              <div class="form-group">
-                <input type="text" name="position" id="position" class="form-control" required/>
-                <label class="form-label" for="posit">Work Position </label>
-              </div>
-      
-              <div class="row">
-                <div class="form-group mb-4 col-lg-4">
-                  <input type="date" name="startDate" id="startDate" class="form-control" required/>
-                  <label class="form-label" for="sDate">Start Date</label>
-                </div>
-                <div class="form-group mb-4 col-lg-4">
-                  <input type="date" name="endDate" id="endDate" class="form-control" />
-                  <label class="form-label" for="eDate">End Date</label>
-                </div>
-                <div class=" mb-4 col-md-4">
-                  <input class="form-control" type="file" name="attachFile" id="attachFile"  />
-                  <label class="form-label" for="file" >Upload the letter</label><%= typeof msg !='undefined' ? msg: ''%>
-                </div>
-              </div>
+              
             
-              <div class="form-group mb-4">
-               <textarea class="form-control" name="moreInfo" id="moreInfo" placeholder="optional..."></textarea> 
-                <label class="form-label" for="txtArea">Additional Information</label>
-              </div>
-              <input type="submit" class="btn  btn-block mb-4 green" value="Submit">
-            </form>
+          
+              <input type="number" name="supContact" id="supContact" class="form-control form-control-sm" required />
+              <label class="form-label" for="supContact">Contact</label>
+            </div>
+
+            <% if(user.institution_id == null) { %>
+              <input type="submit" class="btn  btn-block mb-4 green" value="Submit" />
+            <% }else { %>
+              <input type="submit" class="btn  btn-block mb-4 green disabled" value="You have already submitted" />
+            <% } %>
+          </form>
+      </div>
+        
     </main>
   </section>
 

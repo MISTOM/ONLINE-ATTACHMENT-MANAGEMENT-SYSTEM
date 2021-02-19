@@ -3,6 +3,8 @@ const express = require("express");
 const conn = require("../lib/db");
 const passport = require("passport");
 const passportLocal = require("passport-local");
+const { json } = require("body-parser");
+const { response } = require("express");
 // const { control } = require("../controllers/routeControll");
 
 const router = express.Router();
@@ -12,10 +14,12 @@ function control(req, res, next) {
   if(req.user == "undefined" || req.user == undefined){
     return next()
   }else {
-    if (req.user.is_admin) {
-      res.redirect('/dashboard/admin'); 
-    } else {
-      res.redirect('/dashboard');
+    if (req.user.role_id === 1) {
+        res.redirect('/dashboard/admin'); 
+    }  else if (req.user.role_id === 2){
+        res.send(`the supervisor ${req.user.first_name} will be redirected to the supv. page.`)
+    }  else {
+        res.redirect('/dashboard');
     }
   }
 }
@@ -53,8 +57,8 @@ passport.use(
     (username, password, done) => {
       // callback with username and password from the form
 
-      conn.query("SELECT * FROM persons WHERE username =?",username,
-        function (err, rows) {
+      conn.query("SELECT * FROM users WHERE username =?",username,
+      (err, rows) => {
           if (err) return done(err);
           if (!rows.length) {
             return done(null, false, { message: "No user found." });
@@ -75,10 +79,11 @@ passport.serializeUser((user, done) => {
   done(null, user.user_id);
 });
 
-passport.deserializeUser(function (id, done) {
+passport.deserializeUser((id, done) => {
   conn.query(
-    "SELECT * FROM persons WHERE user_id =?",id,
-    function (err, rows) {
+    `SELECT * FROM users us INNER JOIN user_profiles up ON us.user_id = ${id} AND up.user_id = ${id} LEFT JOIN institution_info insf ON insf.student_id =${id} LEFT JOIN institution_supervisor insv ON insv.institution_id=insf.institution_id LEFT JOIN programme prg ON prg.programme_id = up.programme_id LEFT JOIN departments dept ON dept.department_id = prg.department_id LEFT JOIN school ON school.school_id = dept.school_id `,
+    (err, rows) => {
+      console.log(`DESERIALIZED USER HERE: ${rows[0]}`)
       done(null, rows[0]);
     }
   );

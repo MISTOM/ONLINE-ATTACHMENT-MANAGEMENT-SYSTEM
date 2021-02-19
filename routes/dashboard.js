@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 const conn = require("../lib/db.js");
 const path = require("path");
-const fs = require("fs")
+const fs = require("fs");
 // const flash = require('express-flash');
 
-const { dView, dAdmin, dForm } = require("../controllers/dControll")
+const { dView, dAdmin, dForm, profilePageView, attachForm } = require("../controllers/dControll")
 const { control } = require("../controllers/routeControll");
 const { check, validationResult, matchedData } = require("express-validator");
 
@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
   },
 
   filename:(req, file, cb) => {
-    cb(null, req.user.f_name+ '_' +req.user.user_id+ '_' +Date.now()+ '-' + path.extname(file.originalname).toLowerCase())
+    cb(null, req.user.first_name+ '_' +req.user.registration_number+ '_' +Date.now()+path.extname(file.originalname).toLowerCase())
   }
 });
 const fileFilter = (req, file, cb) => {
@@ -35,6 +35,7 @@ const fileFilter = (req, file, cb) => {
     if (mimetype && extname) {
       return cb(null, true);
     } else {
+        console.log('file type not a mach!!!!!!!!!!')
         return cb("Error: File upload only supports the following filetypes - " + filetypes);
     };
   };
@@ -43,10 +44,11 @@ const upload = multer({storage: storage, fileFilter:fileFilter});
 
 
 
-/**------------------ROUTES--------------------*/
+/------------------ROUTES--------------------*/
 router.get("/", dView);
 router.get("/dForm", dForm)
 router.get("/admin", control, dAdmin);
+router.get("/admin/profileView/(:id)", profilePageView)
 
 router.get("/admin/approve/(:id)", (req, res, next) => {
   console.log("updating////////");
@@ -57,39 +59,13 @@ router.get("/admin/approve/(:id)", (req, res, next) => {
         console.log("There was An Error", err);
       } else {
         console.log("updated!!!!!!!!!!!!");
-        res.redirect("/d/admin");
+        res.redirect("/dashboard/admin");
       }
     }
   );
 });
 
-router.post('/attachfrm',upload.single('attachFile'), (req, res, next) => {
-  let fileInfo = req.file;
-  let formInputs = req.body;
-  console.log(formInputs,fileInfo);
-  res.send(fileInfo);
-  }
-);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+router.post('/attachfrm', upload.single('attachFile'), attachForm);
 
 router.get("/logout", (req, res, next)=>{
   req.session.destroy(()=>{
@@ -97,4 +73,5 @@ router.get("/logout", (req, res, next)=>{
     res.redirect('/');
   });
 })
+
 module.exports = router;

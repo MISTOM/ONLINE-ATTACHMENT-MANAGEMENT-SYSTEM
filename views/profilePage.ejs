@@ -1,0 +1,195 @@
+<!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+<!------ Include the above in your HEAD tag ---------->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head><%- include('./partials/_head') %></head>
+    <link rel="stylesheet" href="/stylesheets/profilePageSty.css">
+    <title>Profile Page</title>
+<body>
+    <!-- <% //if (message) { %>
+        <h3 class="display-4 text-white"><%= message %></h3>
+        <% //} else { %>   -->
+    <div class="container emp-profile">
+        <form method="post">
+            <div class="row">
+                <div class="col-md-4">
+                    <!-- ===============TODO========================== -->
+                    <!-- <div class="profile-img">
+                            <img src="/images/a.png" alt="profile image"/>
+                            <div class="file btn btn-lg btn-primary">
+                                Change Photo
+                                <input type="file" name="file"/>
+                            </div>
+                        </div> -->
+                    </div>
+                    <!-- ================================================= -->
+                    <div class="col-md-6">
+                        <div class="profile-head">
+                            <h5><%= ROWDATA.first_name %></h5>
+                            <h6>
+                                JKUAT KAREN CAMPUS
+                            </h6>
+                            <p class="proile-rating">Gender : <span><%= ROWDATA.gender %></span></p>
+                            <% if(ROWDATA.institution_id === null){%> <p class="text-red">Not applied for Attachment.</p> <% }else{ %>
+                            <button class="btn btn-outline-success">Approve</button>
+                            <% } %>
+
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active green-text" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true" aria-disabled="true">About</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link green-text " id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Attachment Info</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link green-text " id="supervisor-tab" data-toggle="tab" href="#supervisor" role="tab" aria-controls="supervisor" aria-selected="false">Supervisor Info</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="profile-work">
+                            <!-- <embed src="<%= link%>#toolbar=0&navpanes=0" type="application/pdf" width="auto" height="399px" /> -->
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="tab-content profile-tab" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>REGISTRATION NUMBER:</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                                <p><%= ROWDATA.registration_number %></p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>NAME:</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><%= ROWDATA.first_name %> <%= ROWDATA.last_name %> <%= ROWDATA.other_name %> </p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>EMAIL:</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><%= ROWDATA.user_email %></p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>PHONE:</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><%= ROWDATA.phone_number %></p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>PROGRAMME:</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><%= ROWDATA.programme_name %></p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>ACADEMIC YEAR:</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><%= ROWDATA.academic_year %></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                <div class="row">
+                                            <div class="col-md-6">
+                                                <label>NAME OF INSTITUTION:</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><%= ROWDATA.institution_name %></p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>LOCATION:</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><%= ROWDATA.location %></p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>INSTITUTION WEBSITE:</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><%= ROWDATA.email_address%></p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>POSITION ATATCHED:</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><%= ROWDATA.work_position %></p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>DURATION DATES:</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><%= ROWDATA.from_date %>-<%= ROWDATA.to_date %></p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>MORE INFO:</label><br/>
+                                        <p><%= ROWDATA.additional_info %></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="supervisor" role="tabpanel" aria-labelledby="supervisor-tab">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>SUPERVISOR'S NAME:</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                                <p><%= ROWDATA.supv_last_name %> <%= ROWDATA.supv_first_name %></p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>EMAIL:</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><%= ROWDATA.supv_email %></p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>PHONE:</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><%= ROWDATA.supv_contact %></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                        </div>
+                    </div>
+                </div>
+            </form>           
+        </div> 
+        <%- include('./partials/_foot') %>
+        <%// } %> 
+    </body>
+</html>
