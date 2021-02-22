@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npm start"
+    "start": "./bin/www.js"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
@@ -22,7 +22,8 @@
     "mysql": "^2.18.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
-    "pdf-creator-node": "^1.4.2"
+    "pdf-creator-node": "^1.4.2",
+    "nodemon": "^2.0.7"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
