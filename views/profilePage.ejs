@@ -9,9 +9,6 @@
     <link rel="stylesheet" href="/stylesheets/profilePageSty.css">
     <title>Profile Page</title>
 <body>
-    <!-- <% //if (message) { %>
-        <h3 class="display-4 text-white"><%= message %></h3>
-        <% //} else { %>   -->
     <div class="container emp-profile">
         <form method="post">
             <div class="row">
@@ -33,8 +30,13 @@
                                 JKUAT KAREN CAMPUS
                             </h6>
                             <p class="proile-rating">Gender : <span><%= ROWDATA.gender %></span></p>
-                            <% if(ROWDATA.institution_id === null){%> <p class="text-red">Not applied for Attachment.</p> <% }else{ %>
-                            <button class="btn btn-outline-success">Approve</button>
+                            <% if(ROWDATA.institution_id == null){ %>
+                                <p>Not applied for attachment</p>    
+                            <%}else if(ROWDATA.approved == 1){ %>
+                                <a href="#" class="btn btn-sm btn-success disabled">Approved</a>
+                            <% }else { %>
+                                <a href="/dashboard/admin/approve/<%= ROWDATA.user_id%>" class="btn btn-sm btn-outline-success">Approve</a>
+                                <a href="/dashboard/admin/reject/<%= ROWDATA.user_id%>" class="btn btn-sm btn-outline-danger">Reject</a>    
                             <% } %>
 
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -148,7 +150,7 @@
                                                 <label>DURATION DATES:</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p><%= ROWDATA.from_date %>-<%= ROWDATA.to_date %></p>
+                                                <p><%= xdate %> to <%= ydate %></p>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -190,6 +192,5 @@
             </form>           
         </div> 
         <%- include('./partials/_foot') %>
-        <%// } %> 
     </body>
 </html>

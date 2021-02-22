@@ -46,8 +46,10 @@
     <main class="row">
       <div class="container">
         <form action="/dashboard/attachfrm" method="POST" enctype="multipart/form-data">
-        <% if(user.institution_id !== null){ %><h3 class="text-warning">Your details have already been subbmited.</h3> <% }else { %>
-          <h4>Please fill in the form and attach the letter from institution below.</h4><% } %>
+        <% if(user.institution_id !== null && user.approved == 0){ %><h3 class="text-warning">Your details have already been subbmited.</h3> <% }else if(user.approved == 1) { %>
+          <h4 class="text-success">Your attachment programme verification was approved.. </h4><% }else { %>
+            <h4>Please fill in the form and attach the letter from institution below.</h4>
+            <% } %>
             <div class="form-group">
               <input type="text" name="institution" id="institution" class="form-control" required />
               <label class="form-label" for="institution">Name of Institution attached</label>

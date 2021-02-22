@@ -11,22 +11,22 @@ const router = express.Router();
 
 //______________________________________________________________________
 function control(req, res, next) {
-  if(req.user == "undefined" || req.user == undefined){
+  if (req.user == "undefined" || req.user == undefined) {
     return next()
-  }else {
+  } else {
     if (req.user.role_id === 1) {
-        res.redirect('/dashboard/admin'); 
-    }  else if (req.user.role_id === 2){
-        res.send(`the supervisor ${req.user.first_name} will be redirected to the supv. page.`)
-    }  else {
-        res.redirect('/dashboard');
+      res.redirect('/dashboard/admin');
+    } else if (req.user.role_id === 2) {
+      res.send(`the supervisor ${req.user.first_name} will be redirected to the supv. page.`)
+    } else {
+      res.redirect('/dashboard');
     }
   }
 }
 //______________________________________________________________________
 
 /*-----------------------------------ROUTES-- */
-router.get("/",control, function (req, res, next) {
+router.get("/", control, function (req, res, next) {
   res.render("index", {
     title: "LOGIN",
     messages: req.flash('loginMessage')
@@ -42,7 +42,7 @@ router.post("/authentication",
     failureRedirect: "/",
     successFlash: true,
     failureFlash: true,
-    passReqToCallback : true
+    passReqToCallback: true
   })
 );
 
@@ -57,13 +57,13 @@ passport.use(
     (username, password, done) => {
       // callback with username and password from the form
 
-      conn.query("SELECT * FROM users WHERE username =?",username,
-      (err, rows) => {
+      conn.query("SELECT * FROM users WHERE username =?", username,
+        (err, rows) => {
           if (err) return done(err);
           if (!rows.length) {
             return done(null, false, { message: "No user found." });
           }
-          //         |||///////////////USER FOUND WRONG PASSWORD///////////////////
+          ///////////////USER FOUND WRONG PASSWORD///////////////////
           if (!(rows[0].password == password)) {
             return done(null, false, { message: "Oops! Wrong password." });
           } else {
