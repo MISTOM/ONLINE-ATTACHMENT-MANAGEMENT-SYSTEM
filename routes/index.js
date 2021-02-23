@@ -83,7 +83,7 @@ passport.deserializeUser((id, done) => {
   conn.query(
     `SELECT * FROM users us INNER JOIN user_profiles up ON us.user_id = ${id} AND up.user_id = ${id} LEFT JOIN institution_info insf ON insf.student_id =${id} LEFT JOIN institution_supervisor insv ON insv.institution_id=insf.institution_id LEFT JOIN programme prg ON prg.programme_id = up.programme_id LEFT JOIN departments dept ON dept.department_id = prg.department_id LEFT JOIN school ON school.school_id = dept.school_id `,
     (err, rows) => {
-      console.log(`DESERIALIZED USER HERE: ${rows[0]}`)
+      // console.log(`DESERIALIZED USER HERE: ${rows[0]}`)
       done(null, rows[0]);
     }
   );

@@ -88,7 +88,7 @@ const profilePageView = (req, res, next) => {
   conn.query(`SELECT * FROM users us INNER JOIN user_profiles up ON us.user_id = ${id} AND up.user_id = ${id} LEFT JOIN institution_info insf ON insf.student_id =${id} LEFT JOIN institution_supervisor insv ON insv.institution_id=insf.institution_id INNER JOIN academic_year ay ON ay.academic_year_id = us.academic_year_id INNER JOIN programme prg ON up.programme_id = prg.programme_id`,
     (err, rows) => {
       if (err) throw err;
-      console.log(rows);
+      // console.log(rows);
       // console.log(rows, '==============rows[0]=',rows[0]);
       // ____________________-DATE TRAUNCATION-_____________________//
       let date1 = rows[0].from_date;
@@ -168,8 +168,36 @@ const approveCtrl = (req, res, next) => {
   conn.query(`UPDATE institution_info SET approved = 1 WHERE student_id = ${Aid}`,
     (err, result) => {
       if (err) throw err;
-      console.log(result.message);
-      res.redirect(`/dashboard/admin/profileView/${Aid}`);
+      // console.log(result.message);
+      conn.query(`SELECT * FROM institution_supervisor isup INNER JOIN institution_info insf ON insf.institution_id = isup.institution_id AND insf.student_id = ${Aid}`,
+        (err, rows) => {
+          if (err) throw err;
+          //__________________________STUDENTS' SUPERVISORS DETAILS________________/
+          let sfst = rows[0].supv_first_name;
+          let slst = rows[0].supv_last_name;
+          let seml = rows[0].supv_email;
+          let scont = rows[0].supv_contact;
+          let role = 2;
+          let pass = sfst + "-" + slst + "123".toLowerCase();
+          let truepass = pass.replace(/\s/g, '');
+          //________________________________________________________________________/
+          let q = `INSERT INTO users (first_name, last_name, role_id, username, password) VALUES (?, ?, ?, ?, ?)`;
+          let v = [`${sfst}`, `${slst}`, `${role}`, `${sfst}`, `${truepass}`];
+
+          conn.query(q, v, (err, results) => {
+            if (err) throw err;
+            console.log('inserted into users!!!!!!!!!!');
+            let q2 = `INSERT INTO user_profiles (user_email, phone_number, user_id) VALUES (?, ?, (SELECT MAX(user_id) FROM users))`;
+            let v2 = [`${seml}`, `${scont}`];
+            conn.query(q2, v2, (err, results) => {
+              if (err) throw err;
+              console.log('inserted into user profiles________all queriws success');
+
+              res.redirect(`/dashboard/admin/profileView/${Aid}`);
+            });
+          });
+        }
+      );
     }
   );
 }
