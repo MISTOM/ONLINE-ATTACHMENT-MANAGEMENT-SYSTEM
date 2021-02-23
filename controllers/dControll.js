@@ -88,16 +88,17 @@ const profilePageView = (req, res, next) => {
   conn.query(`SELECT * FROM users us INNER JOIN user_profiles up ON us.user_id = ${id} AND up.user_id = ${id} LEFT JOIN institution_info insf ON insf.student_id =${id} LEFT JOIN institution_supervisor insv ON insv.institution_id=insf.institution_id INNER JOIN academic_year ay ON ay.academic_year_id = us.academic_year_id INNER JOIN programme prg ON up.programme_id = prg.programme_id`,
     (err, rows) => {
       if (err) throw err;
-      // console.log(rows);
+      console.log(rows);
       // console.log(rows, '==============rows[0]=',rows[0]);
       // ____________________-DATE TRAUNCATION-_____________________//
       let date1 = rows[0].from_date;
       let date2 = rows[0].to_date;
-      console.log(date1, date2);
-      console.log(rows[0]);
+      // console.log(date1, date2);
+      // console.log(rows[0]);
 
       const xdate = formatDate(date1);
-      const ydate = formatDate(date2)
+      const ydate = formatDate(date2);
+
       res.render("profilePage", {
         ROWDATA: rows[0],
         xdate: xdate,
@@ -106,6 +107,22 @@ const profilePageView = (req, res, next) => {
       });
     });
 }
+
+const Elogbook = (req, res, next) => {
+  if (req.user == "undefined" || req.user == undefined) {
+    res.redirect('/');
+  } else if (req.user.role_id === 1) {
+    res.redirect('/dashboard/admin');
+  } else if (req.user.role_id === 2) {
+    res.send(`This will go to the supervisor ${req.user.first_name} page`);
+  } else {
+    console.log("rendering form e-logbook...");
+    res.render('e-logbook', {
+      user: req.user
+    })
+  };
+}
+
 //==============POST REQUEST FROM DFORM CONTROLER===========================//
 const attachForm = (req, res, next) => {
   console.log(req.file, req.body);
@@ -215,5 +232,6 @@ module.exports = {
   profilePageView,
   attachForm,
   approveCtrl,
-  rejectCtrl
+  rejectCtrl,
+  Elogbook
 };

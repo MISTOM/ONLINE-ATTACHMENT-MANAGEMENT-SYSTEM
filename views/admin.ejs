@@ -134,9 +134,10 @@
           </tr>
         </thead>
         <tbody>
-          <% if(data.institution_id == null){ %>
+          
+          <!-- <% if(data.institution_id == null){ %>
             <h3 class="text-success">No student had applied yet</h3>
-          <% } %>
+          <% } %> -->
           <% for(i in data){ %>
             <% if(data[i].role_id !== 1 & data[i].role_id !== 2 & data[i].institution_id !== null) { %>
           <tr>

@@ -29,12 +29,11 @@
         </li>
       </ul>
     </div>
-  </nav>
-  </div>
+  </nav>    
   <div class="menu">
     <ul>
         <li><a class="item" href="/dashboard">Home</a></li>
-        <li><a class="item" href="#">E-LOG</a></li>
+        <li><a class="item" href="/dashboard/e-logbook">E-Logbook</a></li>
         <li><a class="item text-light" href="/dashboard/dForm">Submit</a></li>
     </ul>
     </div>
@@ -87,10 +86,15 @@
                 <label class="form-label" for="website" >Institution Website</label>
               </div>
 
-              <div class=" form-group col-lg-4">
+              <div class="custom-file col-lg-4">
+                <input type="file" class="custom-file-input" id="attachFile" name="attachFile" required />
+                <label class="custom-file-label" for="attachFile">Upload letter from Institution</label>
+              </div> <%= typeof msg !='undefined' ? msg: ''%>
+
+              <!-- <div class=" form-group col-lg-4">
                 <input class="form-control file" type="file" name="attachFile" id="attachFile"  required />
-                <label class="form-label" for="attachFile" >Upload Letter From Institution</label>                <%= typeof msg !='undefined' ? msg: ''%>
-              </div>
+                <label class="form-label" for="attachFile" >Upload Letter From Institution</label>               
+              </div> -->
               
             </div>
             <div class="row">
@@ -132,7 +136,16 @@
   </section>
 
 
-<footer> <%- include('./partials/_foot') %> </footer>
+<footer>
+   <%- include('./partials/_foot') %> 
+   <script type="text/javascript">
+      $(".custom-file-input").on("change", function() {
+      var fileName = $(this).val().split("\\").pop();
+      $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+      });
+   </script>
+</footer>
+
 </body>
 </html>
     

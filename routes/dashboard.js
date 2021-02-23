@@ -5,7 +5,7 @@ const path = require("path");
 const fs = require("fs");
 // const flash = require('express-flash');
 
-const { dView, dAdmin, dForm, profilePageView, attachForm, approveCtrl, rejectCtrl } = require("../controllers/dControll")
+const { dView, dAdmin, dForm, profilePageView, attachForm, approveCtrl, rejectCtrl, Elogbook } = require("../controllers/dControll")
 const { control } = require("../controllers/routeControll");
 const { check, validationResult, matchedData } = require("express-validator");
 
@@ -43,10 +43,10 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 //==============================================================================
 
 
-
-/------------------ROUTES--------------------*/
+/------------------ROUTES--------------------/
 router.get("/", dView);
-router.get("/dForm", dForm)
+router.get("/dForm", dForm);
+router.get("/e-logbook", Elogbook);
 router.get("/admin", control, dAdmin);
 router.get("/admin/profileView/(:id)", profilePageView)
 
