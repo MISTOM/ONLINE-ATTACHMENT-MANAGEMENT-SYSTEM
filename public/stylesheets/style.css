@@ -141,6 +141,29 @@ header h3 {
   font-weight: 900;
   content: "\f00d";
 }
+.back::before{
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f104";
+  cursor: pointer;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+.noletter::before{
+  font-family: "Font Awesome 5 Free";
+  font-weight: 700;
+  content: "\f128";
+  cursor: pointer;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  
+}
 
 .title {
   letter-spacing: 2px;

@@ -20,8 +20,25 @@ function formatDate(date) {
 
   return [year, month, day].join("/");
 }
+// ________________FORMATTING THE LINK_______________________________//
+function splitLink(filepath) {
+  // console.log('before edit______________' + filepath);
 
-// ________________-___________________________________________//
+  if (filepath == null) {
+    return "#";
+  } else {
+
+    let popped = filepath.split("\\").pop();
+    let x = '/uploads/' + popped;
+    // console.log('edited link here___________' + x);
+    return x;
+  }
+};
+//___________________________________________________________________//
+
+// function logtime(start_date, end_date){
+//   return date()
+// }
 
 
 const dView = async (req, res, next) => {
@@ -98,12 +115,15 @@ const profilePageView = (req, res, next) => {
 
       const xdate = formatDate(date1);
       const ydate = formatDate(date2);
+      //_________________SPLIT LINK_______________//
+
+      const link = splitLink(rows[0].letter_file);
 
       res.render("profilePage", {
         ROWDATA: rows[0],
         xdate: xdate,
         ydate: ydate,
-        link: 'this is link'
+        link: link
       });
     });
 }
@@ -204,12 +224,10 @@ const approveCtrl = (req, res, next) => {
 
 const rejectCtrl = (req, res, next) => {
   let Aid = req.params.id;
-  conn.query(`DELETE FROM institution_info WHERE student_id = ${Aid}`,
-    (err, result) => {
-      if (err) throw err;
-      console.log(result);
-      res.redirect(`/dashboard/admin`)
-    })
+  conn.query(`DELETE institution_info, institution_supervisor FROM institution_info INNER JOIN institution_supervisor ON institution_info.institution_id = institution_supervisor.institution_id WHERE institution_info.student_id = ${Aid}`, (err, result) => {
+    if (err) throw err;
+    console.log('The delete from two tables_____________' + result);
+  });
 }
 
 

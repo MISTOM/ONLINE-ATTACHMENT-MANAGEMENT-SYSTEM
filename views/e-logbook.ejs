@@ -66,23 +66,42 @@
                 </article>
             </div>
             <% }else { %>
-        <div class="container text-md-center">
+              <section>
+                <h3>THE LOG BOOK</h3>
+                <h3>DURATION: 12 WEEKS</h3>
+
+                <h4>INTRODUCTION</h4>
+                <p>This E-Logbook is to assist the student to keep record of training. It will show the deparrmenr and sections in which the student has workeds and the priods of the time spent section or unit.</p>
+
+                <h4>DAILY REPORT</h4>
+                <p>The daily work carried out during the periods of training is to be recorded clearly with scetches and diagrams where applicable.</p>
+
+                <h4>WEEKLY REPORT</h4>
+                <p>This summary of the work done in a week and should cover theory/practical reports on the work covered. The supervisor can comment on any day </p>
+
+                <h4>CHANGE OF ATTACHMENT</h4>
+                <p>The student is expected to start and finish his/her industrial attachment in one establishment. If is becomes absolutely necessary that he/she must change his/her attachment, the student should first secure pemission in writing from the college.
+                </p>
+              </section>
+            <section class="row h-100">
+            <div class=" col my-auto container text-md-center">
             <form action="/dashboard/e-logbook" method="POST">
             <legend>Log book</legend>
             
             <div class="input-group form-outline">
-                <span class="input-group-text">00/00/2020</span>
-                <textarea class="form-control-plaintext text-white" data-mdb-showcounter="true" maxlength="200" aria-label="With textarea"></textarea>
-                <div class="form-helper"></div>
-              </div>
-            
+                <span class="input-group-text"><small id="dateHere"></small></span>
+                <textarea class="form-control-plaintext text-white" aria-label="With textarea" required></textarea> 
+                <input class="btn btn-sm green darken-4 btn-block" type="submit" value="Submit">
+              </div><hr class="white">
             </form>
-
         </div>
+        </section>
         <% } %>
         </section>
 
 
 <footer> <%- include("./partials/_foot") %> </footer>
+
+<script type="text/javascript" src="/javascripts/logbook.js"></script>
 </body>
 </html>

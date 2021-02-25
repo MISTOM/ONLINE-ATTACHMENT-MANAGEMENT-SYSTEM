@@ -1,8 +1,3 @@
-<!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
-<!------ Include the above in your HEAD tag ---------->
-
 <!DOCTYPE html>
 <html lang="en">
     <head><%- include('./partials/_head') %></head>
@@ -21,7 +16,8 @@
                                 <input type="file" name="file"/>
                             </div>
                         </div> -->
-                    </div>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, quas.</p>
+                </div>
                     <!-- ================================================= -->
                     <div class="col-md-6">
                         <div class="profile-head">
@@ -35,8 +31,8 @@
                             <%}else if(ROWDATA.approved == 1){ %>
                                 <a href="#" class="btn btn-sm btn-success disabled">Approved</a>
                             <% }else { %>
-                                <a href="/dashboard/admin/approve/<%= ROWDATA.user_id%>" class="btn btn-sm btn-outline-success">Approve</a>
-                                <a href="/dashboard/admin/reject/<%= ROWDATA.user_id%>" class="btn btn-sm btn-outline-danger">Reject</a>    
+                                <a href="/dashboard/admin/approve/<%= ROWDATA.user_id%>" class="btn btn-sm btn-success">Approve</a>
+                                <a href="/dashboard/admin/reject/<%= ROWDATA.user_id%>" class="btn btn-sm btn-danger">Reject</a>    
                             <% } %>
 
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -52,11 +48,26 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+
+                    <div class="col-md-2">
+                        <a href="/dashboard/admin" class="back btn btn-sm btn-outline-secondary"><small> BACK</small></a>
+                    </div>
+                    
+            
+            </div>
                 <div class="row">
                     <div class="col-md-4">
                         <div class="profile-work">
-                            <!-- <embed src="<%= link%>#toolbar=0&navpanes=0" type="application/pdf" width="auto" height="399px" /> -->
+
+                            <% if(ROWDATA.institution_id !== null){ %>
+                                <a href="<%= link %>" class="btn btn-sm btn-dark">PREVIEW</a>
+                                 <embed src="<%= link%>#toolbar=0&navpanes=0" type="application/pdf" width="auto" height="399px" />
+                            <% }else { %>
+                                <aside style="align-items: center;">
+                                <h4 class="noletter text-mutted">Letter from institution is not available</h4>
+                                </aside>  
+                            <% } %>
+                           
                         </div>
                     </div>
                     <div class="col-md-8">
@@ -110,7 +121,7 @@
                                                 <p><%= ROWDATA.academic_year %></p>
                                             </div>
                                         </div>
-                                    </div>
+                            </div>
                                     
                             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                 <div class="row">
@@ -189,8 +200,8 @@
                         </div>
                     </div>
                 </div>
-            </form>           
-        </div> 
+        </form>           
+    </div> 
         <%- include('./partials/_foot') %>
     </body>
 </html>
