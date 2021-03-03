@@ -3,18 +3,26 @@
 <head>
     <%- include("./partials/_head") %>
     <style type="text/css">
-    .form-cust {
-        background: transparent;
-        border-top: 0;
-        border-right: 0;
-    }
-    form-cust:focus {
-         box-shadow: none;
-         background-color:blue !important;
-         border-color: #388E3C;
-         outline:none;
-    }
-    
+    .md-form textarea.md-textarea:focus:not([readonly]){
+    border-bottom: 1px solid yellow;
+    -webkit-box-shadow: 0 1px 0 0 yellow;
+    box-shadow: 0 1px 0 0 yellow;
+  
+  }
+  .md-form textarea.md-textarea:focus:not([readonly])+label {
+    color: yellow;
+  }
+  a.active{
+    background-color: #1b5e20 !important
+  }
+
+  .uline{
+    text-decoration: underline;
+  }
+  *{
+    transition:300ms all;
+  }
+
     </style>
 
     <title>E-logbook</title>
@@ -53,47 +61,135 @@
         </ul>
         </div>
       <section class="container-fluid board">
-        <header class="container transparent header1">
           <em class="icon"></em>
-        </header>
+        
 
         <% if(user.approved !== 1){ %>
             <div class="row h-100">
                 <article class="col my-auto text-md-center">
-                    <h4 class="display-4">Please await for approval</h4><hr class="green darken-2">
+                    <h3 class="display-4">Please await for approval</h3><hr class="green darken-2">
                     <p class="text-light mb-md-0">You will be able to get your E-logbook once your attachment application is approved!</p>
-                    <footer><small>If you haven't submitted your attachment details, please click <a class="badge bg-info text-wrap" href="/dashboard/dform">here.</a></small></footer>
+                    <footer><small>If you haven't submitted your attachment details, please click <a class="badge lime darken-2" href="/dashboard/dForm">here.</a></small></footer>
                 </article>
             </div>
             <% }else { %>
-              <section>
-                <h3>THE LOG BOOK</h3>
-                <h3>DURATION: 12 WEEKS</h3>
 
-                <h4>INTRODUCTION</h4>
-                <p>This E-Logbook is to assist the student to keep record of training. It will show the deparrmenr and sections in which the student has workeds and the priods of the time spent section or unit.</p>
+              <ul class="nav nav-tabs text-md-center" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link lime-text " id="logbook-tab" data-toggle="tab" href="#thelogbook" role="tab" aria-controls="thelogbook" aria-selected="true" aria-disabled="true">The Log Book</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active lime-text " id="progress-tab" data-toggle="tab" href="#progress" role="tab" aria-controls="progress" aria-selected="false">Daily Progress Chart</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link lime-text " id="logs-tab" data-toggle="tab" href="#alllogs" role="tab" aria-controls="alllogs" aria-selected="false">All Logs</a>
+                </li>
+            </ul>
 
-                <h4>DAILY REPORT</h4>
-                <p>The daily work carried out during the periods of training is to be recorded clearly with scetches and diagrams where applicable.</p>
+            <div class="tab-content" id="myTabContent">
 
-                <h4>WEEKLY REPORT</h4>
-                <p>This summary of the work done in a week and should cover theory/practical reports on the work covered. The supervisor can comment on any day </p>
+              <div class="tab-pane fade show" id="thelogbook" role="tabpanel" aria-labelledby="logbook-tab">
+              <section class="container text-justify text-white">
+                <h5  class="h5 ">DURATION: 12 WEEKS</h5 >
 
-                <h4>CHANGE OF ATTACHMENT</h4>
-                <p>The student is expected to start and finish his/her industrial attachment in one establishment. If is becomes absolutely necessary that he/she must change his/her attachment, the student should first secure pemission in writing from the college.
-                </p>
+                <ol>
+                  <li>
+                  <h5 class="uline">INTRODUCTION</h5 >
+                  <p>This E-Logbook is to assist the you to keep record of training. It will show the deparrment and sections in which the student has worked and the periods of the time spent section or unit.</p>
+                  </li>
+
+                  <li>
+                  <h5 class="uline">DAILY REPORT</h5 >
+                  <p>The daily work carried out during the periods of training is to be recorded clearly with scetches and diagrams where applicable.</p>
+                  </li>
+
+                  <li>
+                  <h5 class="uline">WEEKLY REPORT</h5  >
+                  <p>This summary of the work done in a week and should cover theory/practical reports on the work covered. The supervisor can comment on any day </p>
+                  </li>
+
+                  <li>
+                  <h5 class="uline">CHANGE OF ATTACHMENT</h5 >
+                  <p>You are expected to start and finish your industrial attachment in one establishment. If is becomes absolutely necessary that you must change your attachment, the you should first secure pemission in writing from the college.
+                  Applicatin fot change of place should indicate the name and the addtess (not just the Post Office Box) of the company of industry to which your are to transfer. <i> An attachment not properly authorized will be cancelled.</i>
+                  </p>
+                  </li>
+
+                  <li>
+                  <h5 class="uline">CHANGE OF ATTACHMENT</h5  >
+                  <p>In addition to the daily and weekly record, you should submit a summary report of the work done during the attachment duration e.g. full covarage of the course, problems encountered, and sugested improvements to make the programme worthwhile. The report should contain a sumarry of all the activities of the organization, the particular activities you were involved in, challanges and new skills learnt.</i>
+                  </p>
+                  </li>
+                </ol>
+
               </section>
-            <section class="row h-100">
-            <div class=" col my-auto container text-md-center">
-            <form action="/dashboard/e-logbook" method="POST">
-            <legend>Log book</legend>
-            
-            <div class="input-group form-outline">
-                <span class="input-group-text"><small id="dateHere"></small></span>
-                <textarea class="form-control-plaintext text-white" aria-label="With textarea" required></textarea> 
-                <input class="btn btn-sm green darken-4 btn-block" type="submit" value="Submit">
-              </div><hr class="white">
-            </form>
+              </div>
+
+              <div class="tab-pane fade show active" id="progress" role="tabpanel" aria-labelledby="progress-tab">
+              <form action="/dashboard/e-logbook" method="POST">
+              
+              <section class="table-responsive text-nowrap">
+              <table class="table text-white">
+              <caption class="uline">Log book</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">DAY</th>
+                    <th scope="col">DESCRIPTION OF WORK DONE DAILY</th>
+                    <th scope="col">ACTION</th>
+                  </tr>
+                </thead>
+                
+                <tbody>
+                  <tr>
+                    <!-- HTML 5 DATA ATTRIBUTES -->
+                    <p id="data" data-startdate = "<%= user.from_date %>" data-enddate ="<%= user.to_date %>"
+                      <% if(rows[0] !== undefined){ %> data-studentlogs = "<%= rows[0].student_logs %>" data-logdate ="<%= rows[0].log_date %>" <% } %> ></p>
+
+                    <th scope="row"><p id="dateHere"></p></th>
+                    <td>
+                      <div class="md-form">
+
+                      <textarea class="md-textarea form-control text-white" aria-label="With textarea" name="logtext" id="logtext" rows="3" cols="40" style="min-width:100%; resize:vertical;" <% if(rows[0] == undefined){ %> required <% }else { %> disabled <% } %>></textarea>
+                      <label for="logtext text-white" id="logtextlabel">DESCRIPTION OF WORK DONE AND NEW SKILLS LEARNT</label>
+                      </div>  
+                    </td>
+                    <td>  <input class="btn btn-sm green darken-4 btn-block lime-text" id="logsubmit" type="submit" value="<% if(rows[0] == undefined){ %> submit<% }else {%>logs submited <% } %>" <% if(rows[0] !== undefined){%> disabled<% } %> >  </td>
+                  </tr>
+                </tbody>
+              </table>
+          
+            </section>
+              </form>
+              </div>
+              
+              <div class="tab-pane fade show" id="alllogs" role="tabpanel" aria-labelledby="alllogs-tab">
+                <div class="table-responsive">
+                  <table class="table text-white">
+                    <thead>
+                      <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Logs</th>
+                        <th scope="col">Supvervisor Comments</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                      <% for(let i in allrows){ %>
+                      <tr>
+                        <th scope="row"> <%= allrows[i].fdate %> </th>
+                        <td><%= allrows[i].student_logs %></td>
+                        <td><%= allrows[i].supervisors_logs %></td>
+                      </tr>
+                      <% } %>
+                      
+                    </tbody>
+                  </table>
+
+
+                </div>
+              </div>
+
+            </div>
         </div>
         </section>
         <% } %>

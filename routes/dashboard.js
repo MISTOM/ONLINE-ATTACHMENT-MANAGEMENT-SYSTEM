@@ -5,7 +5,7 @@ const path = require("path");
 const fs = require("fs");
 // const flash = require('express-flash');
 
-const { dView, dAdmin, dForm, profilePageView, attachForm, approveCtrl, rejectCtrl, Elogbook } = require("../controllers/dControll")
+const { dView, dAdmin, dForm, profilePageView, attachForm, approveCtrl, rejectCtrl, Elogbook, logbook, supervisor } = require("../controllers/dControll")
 const { control } = require("../controllers/routeControll");
 const { check, validationResult, matchedData } = require("express-validator");
 
@@ -53,7 +53,10 @@ router.get("/admin/profileView/(:id)", profilePageView)
 router.get("/admin/approve/(:id)", approveCtrl);
 router.get("/admin/reject/(:id)", rejectCtrl);
 
-router.post('/attachfrm', upload.single('attachFile'), attachForm);
+router.post("/attachfrm", upload.single("attachFile"), attachForm);
+router.post("/e-logbook", logbook);
+
+router.get("/supervisor", supervisor);
 
 router.get("/logout", (req, res, next) => {
   req.session.destroy(() => {

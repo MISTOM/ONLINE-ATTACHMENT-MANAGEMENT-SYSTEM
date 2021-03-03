@@ -1,12 +1,12 @@
-const createError = require("http-errors");
-const express = require("express");
-const path = require("path");
-const cookieParser = require("cookie-parser");
-const logger = require("morgan");
-const bodyParser = require("body-parser");
-const flash = require("connect-flash");
-const session = require("express-session");
-const expressMessages = require("express-messages")
+const createError = require("http-errors")
+  , express = require("express")
+  , path = require("path")
+  , cookieParser = require("cookie-parser")
+  , logger = require("morgan")
+  , bodyParser = require("body-parser")
+  , flash = require("connect-flash")
+  , session = require("express-session")
+  , expressMessages = require("express-messages");
 
 const passport = require("passport");
 
@@ -25,19 +25,19 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   session({
-    name: "tomSess",
+    name: "O A M S",
     secret: "80808080",
     resave: true,
     saveUninitialized: true,
     cookie: { maxAge: 3600000 }//one hr
   })
-  );
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-app.use(function(req, res, next){
+app.use(function (req, res, next) {
   res.locals.message = expressMessages;
   next();
 });
@@ -72,5 +72,4 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
-
 module.exports = app;

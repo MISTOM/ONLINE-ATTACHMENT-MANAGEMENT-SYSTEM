@@ -31,8 +31,8 @@
                             <%}else if(ROWDATA.approved == 1){ %>
                                 <a href="#" class="btn btn-sm btn-success disabled">Approved</a>
                             <% }else { %>
-                                <a href="/dashboard/admin/approve/<%= ROWDATA.user_id%>" class="btn btn-sm btn-success">Approve</a>
-                                <a href="/dashboard/admin/reject/<%= ROWDATA.user_id%>" class="btn btn-sm btn-danger">Reject</a>    
+                                <a href="/dashboard/admin/approve/<%= ROWDATA.user_id%>" class="btn btn-sm btn-success approve">Approve</a>
+                                <a href="/dashboard/admin/reject/<%= ROWDATA.user_id%>" class="btn btn-sm btn-danger disApprove">Reject</a>    
                             <% } %>
 
                             <ul class="nav nav-tabs" id="myTab" role="tablist">

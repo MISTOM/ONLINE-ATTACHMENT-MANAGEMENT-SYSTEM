@@ -45,10 +45,25 @@
     <main class="row">
       <div class="container">
         <form action="/dashboard/attachfrm" method="POST" enctype="multipart/form-data">
-        <% if(user.institution_id !== null && user.approved == 0){ %><h3 class="text-warning">Your details have already been subbmited.</h3> <% }else if(user.approved == 1) { %>
-          <h4 class="text-success">Your attachment programme verification was approved.. </h4><% }else { %>
+        <% if(user.institution_id !== null && user.approved == 0){ %>
+          <div class="row h-100">
+          <article class="col my-auto text-md-center">
+              <h4 class="display-4">Your attachment details have been submitted Successfully</h4><hr class="green darken-2">
+              <p class="text-light mb-md-0">Please await as we validate your details </p>
+          </article>
+          </div> 
+       <% }else if(user.approved == 1) { %>
+         
+          <div class="row h-100">
+          <article class="col my-auto text-md-center">
+              <h4 class="display-4 text-responsive">You have been approved to startyour atachment programme</h4><hr class="green darken-2">
+              <footer>Please procede in filling your E_Logbook <a class="badge lime darken-2 text-wrap" href="/dashboard/e-logbook">here.</a></footer>
+          </article>
+          </div> 
+
+      <% }else { %>
             <h4>Please fill in the form and attach the letter from institution below.</h4>
-            <% } %>
+            
             <div class="form-group">
               <input type="text" name="institution" id="institution" class="form-control" required />
               <label class="form-label" for="institution">Name of Institution attached</label>
@@ -127,7 +142,8 @@
             <% if(user.institution_id == null) { %>
               <input type="submit" class="btn  btn-block mb-4 green" value="Submit" />
             <% }else { %>
-              <input type="submit" class="btn  btn-block mb-4 green disabled" value="You have already submitted" />
+              <input type="submit" class="btn  btn-block mb-4 green" value="You have already submitted" />
+            <% } %>
             <% } %>
           </form>
       </div>
