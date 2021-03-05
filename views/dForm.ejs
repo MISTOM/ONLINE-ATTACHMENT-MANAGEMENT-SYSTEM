@@ -62,7 +62,8 @@
           </div> 
 
       <% }else { %>
-            <h4>Please fill in the form and attach the letter from institution below.</h4>
+        <h4 class="text-center">Please fill in the form and attach the letter from institution below.</h4>
+        <div class="mx-auto">
             
             <div class="form-group">
               <input type="text" name="institution" id="institution" class="form-control" required />
@@ -91,36 +92,31 @@
             </div> 
 
             <div class="row">
-              <div class=" form-group col-lg-4">
+              <div class=" form-group col-lg-6">
                 <input class="form-control" type="email" name="email" id="email" required />
                 <label class="form-label" for="email" >Institution email</label>
               </div>
 
-              <div class=" form-group col-lg-4">
+              <div class=" form-group col-lg-6">
                 <input class="form-control" type="text" name="website" id="website"/>
                 <label class="form-label" for="website" >Institution Website</label>
               </div>
-
-              <div class="custom-file col-lg-4">
+              </div>
+              
+              <div class="row">
+              <div class="custom-file col-lg-6 mb-3">
                 <input type="file" class="custom-file-input" id="attachFile" name="attachFile" required />
                 <label class="custom-file-label" for="attachFile">Upload letter from Institution</label>
               </div> <%= typeof msg !='undefined' ? msg: ''%>
 
-              <!-- <div class=" form-group col-lg-4">
-                <input class="form-control file" type="file" name="attachFile" id="attachFile"  required />
-                <label class="form-label" for="attachFile" >Upload Letter From Institution</label>               
-              </div> -->
-              
-            </div>
-            <div class="row">
-              <div class="form-group col-lg-8">
+              <div class="form-group col-lg-6">
               <textarea class="form-control" name="moreInfo" id="moreInfo" placeholder="optional..."></textarea> 
               <label class="form-label" for="txtArea">Additional Information</label>
               </div>
             </div>
 
             <h4> Please Fill in Your Supervisors Details</h4>
-            <div class="col-xl-4">
+            <div class="col">
               
               <input type="text" name="supFirstName" id="supFirstName" class="form-control form-control-sm" required />
               <label class="form-label" for="supFirstName">First Name</label>
@@ -132,12 +128,11 @@
               <input type="email" name="supEmail" id="supEmail" class="form-control form-control-sm" required />
               <label class="form-label" for="supEmail">Email</label>
               </div>
-              
-            
           
               <input type="number" name="supContact" id="supContact" class="form-control form-control-sm" required />
               <label class="form-label" for="supContact">Contact</label>
             </div>
+          </div>
 
             <% if(user.institution_id == null) { %>
               <input type="submit" class="btn  btn-block mb-4 green" value="Submit" />

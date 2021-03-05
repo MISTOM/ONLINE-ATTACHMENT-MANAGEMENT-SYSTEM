@@ -237,9 +237,9 @@ form {
   -webkit-font-smoothing: antialiased;
 }
 
-.comment{
+.comment::before{
   font-family: "Font Awesome 5 Free";
-  font-weight: 900;
+  font-weight: 400;
   content: "\f075";
   cursor: pointer;
   display: inline-block;

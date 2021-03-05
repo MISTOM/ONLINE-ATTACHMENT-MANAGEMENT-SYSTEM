@@ -19,6 +19,13 @@
   .uline{
     text-decoration: underline;
   }
+
+  @media (max-width: 850px) {
+    .text-nowrap1 {
+        white-space: nowrap !important;
+        word-wrap: break-word!important;
+    }
+  }
   *{
     transition:300ms all;
   }
@@ -57,10 +64,10 @@
 
             <ul class="nav nav-tabs text-md-center" id="myTab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link lime-text " id="logbook-tab" data-toggle="tab" href="#thelogbook" role="tab" aria-controls="thelogbook" aria-selected="true" aria-disabled="true">The Log Book</a>
+                    <a class="nav-link lime-text" id="logbook-tab" data-toggle="tab" href="#thelogbook" role="tab" aria-controls="thelogbook" aria-selected="true" aria-disabled="true">The Log Book</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link lime-text " id="logs-tab" data-toggle="tab" href="#alllogs" role="tab" aria-controls="alllogs" aria-selected="false">All Logs</a>
+                    <a class="nav-link lime-text active" id="logs-tab" data-toggle="tab" href="#alllogs" role="tab" aria-controls="alllogs" aria-selected="false">All Logs</a>
                 </li>
             </ul>
 
@@ -101,34 +108,38 @@
               </section>
               </div>
               
-              <div class="tab-pane fade show" id="alllogs" role="tabpanel" aria-labelledby="alllogs-tab">
+              <div class="tab-pane fade show active" id="alllogs" role="tabpanel" aria-labelledby="alllogs-tab">
+
                 <div class="table-responsive">
-                  <table class="table text-white">
-                    <thead>
-                      <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Student Logs</th>
-                        <th scope="col">Supvervisor Comments</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <form action="/supervisorlogs" method="post">
-                        <div class="md-form">
-                      <% for(let i in rows){ %>
-                      <tr>
-                        <th scope="row"> <%= rows[i].fdate %> </th>
-                        <td><%= rows[i].student_logs %></td>
-                        <td> <textarea type="text" class="md-textarea form-control text-white" name="supervisorLogs" id="supervisorLogs" placeholder="<%= rows[i].supervisors_logs %>" required></textarea> <button type="submit" class="btn btn-sm btn-outline-success"> <i class="comment"></i> </button>
-                        </td>
-                      </tr>
-                      <% } %>
-                        </div>
-                      </form>
-                    </tbody>
-                  </table>
-
-
+                    <table class="table text-white">
+                        <thead>
+                            <tr>
+                              <th scope="col">Date</th>
+                              <th scope="col" class="text-center text-nowrap">Student Logs</th>
+                              <th scope="col" class="text-nowrap">Comments by Supervisor/Lecturer</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          <% for(let i in rows){ %>
+                            <form action="/dashboard/supervisorlogs" method="POST">
+                              <div class="md-form">
+                            <tr>
+                              <th scope="row" class="text-nowrap"> <%= rows[i].fdate %> </th>
+                              <td><p class="text-nowrap1"><%= rows[i].student_logs %></p></td>
+                              <td>
+                                  <textarea type="text" class="md-textarea form-control" name="supervisorLogs" id="supervisorLogs" rows="2" cols="" placeholder="<%= rows[i].supervisors_logs %>"></textarea>
+                                  <button type="submit" class="btn btn-sm btn-outline-success"> <i class="comment">Comment</i></button>
+                                      <input type="text" name="logdate" id="logdate" class="d-none" value="<%= rows[i].fdate %>" />
+                                      <input type="text" name="userid" id="logdate" class="d-none" value="<%= rows[i].user_id %>" />
+                              </td>
+                            </tr>
+                          </div>
+                        </form>
+                        <% } %>
+                          </tbody>
+                    </table>
                 </div>
+
               </div>
 
             </div>

@@ -60,7 +60,7 @@
                         <div class="profile-work">
 
                             <% if(ROWDATA.institution_id !== null){ %>
-                                <a href="<%= link %>" class="btn btn-sm btn-dark">PREVIEW</a>
+                                <a href="<%= link %>" target="_blank" rel="noreferrer" class="btn btn-sm btn-dark">PREVIEW</a>
                                  <embed src="<%= link%>#toolbar=0&navpanes=0" type="application/pdf" width="auto" height="399px" />
                             <% }else { %>
                                 <aside style="align-items: center;">

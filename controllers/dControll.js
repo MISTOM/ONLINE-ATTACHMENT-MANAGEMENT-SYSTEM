@@ -10,6 +10,7 @@ const today = formatDate(sdate);
 
 // ________________TO HUMAN READABLE FORMAT_________________//
 function formatDate(date) {
+  if (date === null) return '';
   let d = new Date(date),
     month = (d.getMonth() + 1),
     day = d.getDate(),
@@ -31,43 +32,38 @@ function splitLink(filepath) {
 };
 //___________________________________________________________________//
 
-const dView = async (req, res, next) => {
-  if (req.user == undefined) { res.redirect('/') } else {
-
-    if (req.user.role_id === 1) {
-      res.redirect('/dashboard/admin');
-
-      if (req.user.role_id === 2) {
-        res.redirect('/dashboard/supervisor');
-      } else {
-        console.log("rendering std dashboard...");
-        let link = await genPDF(req, res, next);
-        res.render("dashboard", {
-          cred: req.user,
-          link: link
-        });
-      };
-    }
-  }
+exports.dView = async (req, res, next) => {
+  if (req.user == undefined) {
+    res.redirect('/')
+  } else if (req.user.role_id === 1) {
+    res.redirect('/dashboard/admin')
+  } else if (req.user.role_id === 2) {
+    res.redirect('/dashboard/supervisor');
+  } else {
+    console.log("rendering std dashboard...");
+    let link = await genPDF(req, res, next);
+    res.render("dashboard", {
+      cred: req.user,
+      link: link
+    });
+  };
 }
-
-const dForm = (req, res, next) => {
-  if (req.user == undefined) { res.redirect('/') } else {
-
-    if (req.user.role_id === 1) res.redirect('/dashboard/admin');
-
-    if (req.user.role_id === 2) {
-      res.redirect('/dashboard/supervisor');
-    } else {
-      console.log("rendering form dashboard...");
-      res.render('dForm', {
-        user: req.user
-      })
-    };
+exports.dForm = (req, res, next) => {
+  if (req.user == undefined) {
+    res.redirect('/')
+  } else if (req.user.role_id === 1) {
+    res.redirect('/dashboard/admin')
+  } else if (req.user.role_id === 2) {
+    res.redirect('/dashboard/supervisor');
+  } else {
+    console.log("rendering dform...");
+    res.render("dForm", {
+      user: req.user
+    });
   };
 }
 
-const dAdmin = (req, res, next) => {
+exports.dAdmin = (req, res, next) => {
   console.log("In Admin=================");
   conn.query(
     `SELECT * FROM users us INNER JOIN user_profiles up ON us.user_id = up.user_id LEFT JOIN institution_info insf ON insf.student_id = us.user_id INNER JOIN academic_year ay ON ay.academic_year_id = us.academic_year_id INNER JOIN programme prg ON up.programme_id = prg.programme_id`,
@@ -82,10 +78,11 @@ const dAdmin = (req, res, next) => {
           data: rows
         });
       }
-    });
+    }
+  );
 }
 
-const profilePageView = (req, res, next) => {
+exports.profilePageView = (req, res, next) => {
   console.log("rendering profile page.............");
   let id = req.params.id;
 
@@ -112,12 +109,13 @@ const profilePageView = (req, res, next) => {
         ydate: ydate,
         link: link
       });
-    });
+    }
+  );
 }
 
 
 
-const Elogbook = (req, res, next) => {
+exports.Elogbook = (req, res, next) => {
   if (req.user == undefined) { res.redirect('/') } else {
 
     if (req.user.role_id === 1) res.redirect('/dashboard/admin');
@@ -152,7 +150,7 @@ const Elogbook = (req, res, next) => {
 }
 
 //_____________POST REQUEST FROM LOGBOOK______________//
-const logbook = (req, res, next) => {
+exports.logbook = (req, res, next) => {
   const dayslog = req.body.logtext;
   const id = req.user.user_id;
 
@@ -166,8 +164,10 @@ const logbook = (req, res, next) => {
   });
 }
 
-//==============POST REQUEST FROM DFORM CONTROLER===========================//
-const attachForm = (req, res, next) => {
+
+
+//==============POST REQUEST FROM DFORMnpm===========================//
+exports.attachForm = (req, res, next) => {
   console.log(req.file, req.body);
   //==============================QUERY 1=====================================================================
   let q1 = `INSERT INTO institution_info (student_id, institution_name, location, from_date, to_date, work_position, website, email_address, additional_info, letter_file) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -206,7 +206,7 @@ const attachForm = (req, res, next) => {
 }
 
 //=========================================APPROVE/REJECT CONTROLER=============//
-const approveCtrl = (req, res, next) => {
+exports.approveCtrl = (req, res, next) => {
   let Aid = req.params.id;
   conn.query(`UPDATE institution_info SET approved = 1 WHERE student_id = ${Aid}`,
     (err, result) => {
@@ -246,7 +246,7 @@ const approveCtrl = (req, res, next) => {
   );
 }
 
-const rejectCtrl = (req, res, next) => {
+exports.rejectCtrl = (req, res, next) => {
   let Aid = req.params.id;
   conn.query(`DELETE institution_info, institution_supervisor FROM institution_info INNER JOIN institution_supervisor ON institution_info.institution_id = institution_supervisor.institution_id WHERE institution_info.student_id = ${Aid}`, (err, result) => {
     if (err) throw err;
@@ -256,28 +256,36 @@ const rejectCtrl = (req, res, next) => {
 
 //=================================================INSTITUTION_SUPERVISOR===========================
 
-const supervisor = (req, res, next) => {
+exports.supervisor = (req, res, next) => {
   const supNo = req.user.registration_number;
   let q = `SELECT * FROM activities_table WHERE user_id IN (SELECT student_id FROM institution_info insf, institution_supervisor insv WHERE insf.institution_id = insv.institution_id AND insv.institution_supervisor_id = ${supNo})`;
   conn.query(q, (err, rows) => {
     if (err) throw err
-
     //_____FORMATING THE LOG DATE___
     for (let i in rows) {
       let fdate = formatDate(rows[i].log_date);
       rows[i].fdate = fdate;
     }
-
     res.render('supervisor', {
       user: req.user,
       rows: rows
     })
   });
-
 }
 
+exports.supComment = (req, res, next) => {
+  const supervisorLog = req.body.supervisorLogs;
+  const logdate = req.body.logdate;
+  const userid = req.body.userid
+  console.log(req.body);
+  let q = 'UPDATE `activities_table` SET `supervisors_logs`= ' + '"' + supervisorLog + '"' + ' WHERE `log_date`=' + '"' + logdate + '"' + ' AND `user_id`=' + userid + '';
 
-
+  conn.query(q, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    res.redirect('/dashboard/supervisor');
+  })
+}
 
 //=========================================================GENERATING PDF()===========================
 const genPDF = async (req, res, next) => {
@@ -307,16 +315,3 @@ const genPDF = async (req, res, next) => {
   return filePath;
 }
 //=============================================================================================================
-
-module.exports = {
-  dView,
-  dForm,
-  dAdmin,
-  profilePageView,
-  attachForm,
-  approveCtrl,
-  rejectCtrl,
-  Elogbook,
-  logbook,
-  supervisor
-}

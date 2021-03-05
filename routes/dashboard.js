@@ -5,7 +5,8 @@ const path = require("path");
 const fs = require("fs");
 // const flash = require('express-flash');
 
-const { dView, dAdmin, dForm, profilePageView, attachForm, approveCtrl, rejectCtrl, Elogbook, logbook, supervisor } = require("../controllers/dControll")
+const funs = require("../controllers/dControll");
+
 const { control } = require("../controllers/routeControll");
 const { check, validationResult, matchedData } = require("express-validator");
 
@@ -44,19 +45,20 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 
 /------------------ROUTES--------------------/
-router.get("/", dView);
-router.get("/dForm", dForm);
-router.get("/e-logbook", Elogbook);
-router.get("/admin", control, dAdmin);
-router.get("/admin/profileView/(:id)", profilePageView)
+router.get("/", funs.dView);
+router.get("/dForm", funs.dForm);
+router.get("/e-logbook", funs.Elogbook);
+router.get("/admin", control, funs.dAdmin);
+router.get("/admin/profileView/(:id)", funs.profilePageView)
 
-router.get("/admin/approve/(:id)", approveCtrl);
-router.get("/admin/reject/(:id)", rejectCtrl);
+router.get("/admin/approve/(:id)", funs.approveCtrl);
+router.get("/admin/reject/(:id)", funs.rejectCtrl);
 
-router.post("/attachfrm", upload.single("attachFile"), attachForm);
-router.post("/e-logbook", logbook);
+router.post("/attachfrm", upload.single("attachFile"), funs.attachForm);
+router.post("/e-logbook", funs.logbook);
 
-router.get("/supervisor", supervisor);
+router.get("/supervisor", funs.supervisor);
+router.post("/supervisorlogs", funs.supComment)
 
 router.get("/logout", (req, res, next) => {
   req.session.destroy(() => {
