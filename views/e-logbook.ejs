@@ -29,8 +29,8 @@
 </head>
 <body style="background-color: #555;">
         <nav class="navbar navbar-expand-sm navbar-dark green darken-4">
-        <a class="navbar-brand" href="#"><strong>G-L</strong></a>
-          <a class="text-light" href="#"><strong>GET_LETTER</strong></a>
+        <a class="navbar-brand" href="#"><strong>OAMS</strong></a>
+          <a class="text-light" href="#"><strong>ONLINE ATTACHMENT MANAGEMENT SYSTEM</strong></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-6"
           aria-controls="navbarSupportedContent-6" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -53,14 +53,14 @@
           </ul>
         </div>
       </nav>
-      <div class="menu">
+      <div class="menu active">
         <ul>
             <li><a class="item" href="/dashboard">Home</a></li>
             <li><a class="item text-light" href="/dashboard/e-logbook">E-Logbook</a></li>
             <li><a class="item" href="/dashboard/dForm">Submit</a></li>
         </ul>
         </div>
-      <section class="container-fluid board">
+      <section class="container-fluid board active">
           <em class="icon"></em>
         
 
@@ -176,7 +176,7 @@
                       
                       <% for(let i in allrows){ %>
                       <tr>
-                        <th scope="row"> <%= allrows[i].fdate %> </th>
+                        <th scope="row" class="text-nowrap"> <%= allrows[i].fdate %> </th>
                         <td><%= allrows[i].student_logs %></td>
                         <td><%= allrows[i].supervisors_logs %></td>
                       </tr>

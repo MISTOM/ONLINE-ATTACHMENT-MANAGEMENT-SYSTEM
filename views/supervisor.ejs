@@ -36,8 +36,8 @@
 </head>
 <body style="background-color: #555;">
         <nav class="navbar navbar-expand-sm navbar-dark green darken-4">
-        <a class="navbar-brand" href="#"><strong>G-L</strong></a>
-          <a class="text-light" href="#"><strong>GET_LETTER</strong></a>
+        <a class="navbar-brand" href="#"><strong>OAMS</strong></a>
+          <a class="text-light" href="#"><strong>ONLINE ATTACHMENT MANAGEMENT SYSTEM</strong></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-6"
           aria-controls="navbarSupportedContent-6" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -127,8 +127,10 @@
                               <th scope="row" class="text-nowrap"> <%= rows[i].fdate %> </th>
                               <td><p class="text-nowrap1"><%= rows[i].student_logs %></p></td>
                               <td>
-                                  <textarea type="text" class="md-textarea form-control" name="supervisorLogs" id="supervisorLogs" rows="2" cols="" placeholder="<%= rows[i].supervisors_logs %>"></textarea>
+                                  <textarea type="text" class="md-textarea form-control" name="supervisorLogs" id="supervisorLogs" rows="2" cols="1" placeholder="<%= rows[i].supervisors_logs %>" required></textarea>
                                   <button type="submit" class="btn btn-sm btn-outline-success"> <i class="comment">Comment</i></button>
+
+                                  <a class="btn btn-info" onclick="toastr.info('Hi! I am info message.');">Info message</a>
                                       <input type="text" name="logdate" id="logdate" class="d-none" value="<%= rows[i].fdate %>" />
                                       <input type="text" name="userid" id="logdate" class="d-none" value="<%= rows[i].user_id %>" />
                               </td>

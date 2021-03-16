@@ -1,8 +1,12 @@
 const fs = require("fs");
 const path = require("path");
 const pdf = require("pdf-creator-node");
+const nodemailer = require("nodemailer");
 const options = require("./helpers/options");
 const conn = require("../lib/db.js");
+const SendmailTransport = require("nodemailer/lib/sendmail-transport");
+
+const PDFDocument = require('pdfkit');
 
 //________TODAY____________-//
 let sdate = new Date();
@@ -22,14 +26,14 @@ function formatDate(date) {
   return temp;
 }
 // ________________FORMATTING THE LINK SENT TO THE PROFILE PAGE_______________________________//
-function splitLink(filepath) {
-  // console.log('before edit______________' + filepath);
-  if (filepath == null) return "#";
-  let popped = filepath.split("\\").pop();
-  let x = '/uploads/' + popped;
-  // console.log('edited link here___________' + x);
-  return x;
-};
+// function splitLink(filepath) {
+//   console.log('before edit______________' + filepath);
+//   if (filepath == null) return "#";
+//   let popped = filepath.split("/").pop();
+//   let x = '/uploads/' + popped;
+//   console.log('edited link here___________' + x);
+//   return x;
+// };
 //___________________________________________________________________//
 
 exports.dView = async (req, res, next) => {
@@ -101,7 +105,7 @@ exports.profilePageView = (req, res, next) => {
       const ydate = formatDate(date2);
       //_________________SPLIT LINK_______________//
 
-      const link = splitLink(rows[0].letter_file);
+      const link = `/uploads/${rows[0].letter_file}`;
 
       res.render("profilePage", {
         ROWDATA: rows[0],
@@ -160,19 +164,21 @@ exports.logbook = (req, res, next) => {
   conn.query(q, v, (err, result) => {
     if (err) throw err;
     console.log(result);
+    // sendEmail("kigardetom2001@gmail.com", `<h1>hello there</h1> <h3>${dayslog}</h3>`, "oams", "this is the body")
+    //   .catch(e => { console.log(e) });
     res.redirect('/dashboard/e-logbook');
   });
 }
 
 
 
-//==============POST REQUEST FROM DFORMnpm===========================//
+//==============POST REQUEST FROM DFORM===========================//
 exports.attachForm = (req, res, next) => {
   console.log(req.file, req.body);
   //==============================QUERY 1=====================================================================
   let q1 = `INSERT INTO institution_info (student_id, institution_name, location, from_date, to_date, work_position, website, email_address, additional_info, letter_file) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-  let v1 = [`${req.user.user_id}`, `${req.body.institution}`, `${req.body.location}`, `${req.body.startDate}`, `${req.body.endDate}`, `${req.body.position}`, `${req.body.website}`, `${req.body.email}`, `${req.body.moreInfo}`, `${req.file.path}`];
+  let v1 = [`${req.user.user_id}`, `${req.body.institution}`, `${req.body.location}`, `${req.body.startDate}`, `${req.body.endDate}`, `${req.body.position}`, `${req.body.website}`, `${req.body.email}`, `${req.body.moreInfo}`, `${req.file.filename}`];
 
   //==============================QUERY 2=====================================================================
   let q2 = `INSERT INTO institution_supervisor (supv_first_name, supv_last_name, supv_email, supv_contact, institution_id) VALUES (?, ?, ?, ?, (SELECT MAX(institution_id) from institution_info))`;
@@ -215,6 +221,7 @@ exports.approveCtrl = (req, res, next) => {
       conn.query(`SELECT * FROM institution_supervisor isup INNER JOIN institution_info insf ON insf.institution_id = isup.institution_id AND insf.student_id = ${Aid}`,
         (err, rows) => {
           if (err) throw err;
+
           //__________________________STUDENTS' SUPERVISORS DETAILS________________/
           let sid = rows[0].institution_supervisor_id;
           let sfst = rows[0].supv_first_name;
@@ -224,20 +231,43 @@ exports.approveCtrl = (req, res, next) => {
           let role = 2;
           let pass = sfst + "-" + slst + "123".toLowerCase();
           let truepass = pass.replace(/\s/g, "");
+
+          let institution = rows[0].institution_name
           //________________________________________________________________________/
+
           let q = `INSERT INTO users (first_name, last_name, role_id, registration_number, username, password) VALUES (?, ?, ?, ?, ?, ?)`;
           let v = [`${sfst}`, `${slst}`, `${role}`, `${sid}`, `${sfst}`, `${truepass}`];
 
           conn.query(q, v, (err, results) => {
             if (err) throw err;
             console.log('inserted into users!!!!!!!!!!');
+
             let q2 = `INSERT INTO user_profiles (user_email, phone_number, user_id) VALUES (?, ?, (SELECT MAX(user_id) FROM users))`;
             let v2 = [`${seml}`, `${scont}`];
+
             conn.query(q2, v2, (err, results) => {
               if (err) throw err;
               console.log('inserted into user profiles________all queriws success');
 
-              res.redirect(`/dashboard/admin/profileView/${Aid}`);
+              conn.query(`SELECT * FROM users WHERE user_id = ${Aid}`,
+                (err, rows) => {
+                  if (err) throw err;
+                  /----------------------------------SEND EMAIL TO SUPERVISOR----------------------------/
+                  let output = `<h1> Hello ${sfst} from ${institution}!</h1><br>
+                              <h3>The username for your OAMS Account is ${sfst}.</h3><hr>
+                              <h3>The password is ${truepass}.</h3>
+                              <p>If you are not the supervisor the student <i>${rows[0].first_name}</i> at ${institution}, please ignore the email</p>
+                              <small>Thank You; Regards OAMS Management.</small>`;
+                  let mailtext = `mail text`;
+                  let mailSubject = "Credentials of the Online Attachment System"
+
+                  sendEmail(`${seml}`, output, mailSubject, mailtext)
+                    .catch(e => console.log(e));
+
+                  res.redirect(`/dashboard/admin/profileView/${Aid}`);
+
+                })
+
             });
           });
         }
@@ -251,6 +281,7 @@ exports.rejectCtrl = (req, res, next) => {
   conn.query(`DELETE institution_info, institution_supervisor FROM institution_info INNER JOIN institution_supervisor ON institution_info.institution_id = institution_supervisor.institution_id WHERE institution_info.student_id = ${Aid}`, (err, result) => {
     if (err) throw err;
     console.log('The delete from two tables_____________' + result);
+    res.redirect(`/dashboard/admin/profileview/${Aid}`)
   });
 }
 
@@ -287,31 +318,198 @@ exports.supComment = (req, res, next) => {
   })
 }
 
-//=========================================================GENERATING PDF()===========================
-const genPDF = async (req, res, next) => {
-  const html = fs.readFileSync(path.join(__dirname, '../views/Templates/pdf.html'), 'utf-8');
-  const fileName = req.user.first_name + '_' + req.user.registration_number + '.pdf';
-  const document = {
-    html: html,
-    data: {
-      USERID: req.user.registration_number,
-      FIRSTNAME: req.user.first_name,
-      LASTNAME: req.user.last_name,
-      OTHERNAME: req.user.other_name,
-      PROGRAMME: req.user.programme_name,
-      DEPARTMENT: req.user.department_name,
-      SCHOOL: req.user.school_name
-    },
 
-    path: './public/docs/' + fileName
-  }
-  pdf.create(document, options)
-    .then(console.log('pdf-success'))
-    .catch(e => console.log(e));
+//==================================================NODEMAILER=======================================
+"use strict";
 
-  let filePath = 'docs/' + fileName;
-  // console.log(filePath);
+async function sendEmail(toAccount, mailhtml, mailSubject, mailText) {
 
-  return filePath;
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    host: process.env.MAIL_HOST || "",
+    port: 465,
+    secure: true, // true for 465, false for other ports
+    auth: {
+      user: process.env.ACC_USER || "",
+      pass: process.env.ACC_PASSWORD || ""
+    }
+  });
+
+  // send mail with defined transport object
+  let mailOptions = {
+    from: `"OnlineAMS" <${process.env.ACC_USER}>` || `"`, // sender address
+    to: toAccount, // list of receivers
+    subject: mailSubject, // Subject line
+    text: mailText, // plain text body
+    html: mailhtml, // html body
+  };
+
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      return console.log(err)
+    }
+    console.log("Message sent: %s", info.messageId);
+    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+  })
+  // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 }
+
+
+//=========================================================GENERATING PDF()===========================
+// const genPDF = async (req, res, next) => {
+//   const html = fs.readFileSync(path.join(__dirname, '../views/Templates/pdf.html'), 'utf-8');
+//   const fileName = req.user.first_name + '_' + req.user.registration_number + '.pdf';
+//   const document = {
+//     html: html,
+//     data: {
+//       USERID: req.user.registration_number,
+//       FIRSTNAME: req.user.first_name,
+//       LASTNAME: req.user.last_name,
+//       OTHERNAME: req.user.other_name,
+//       PROGRAMME: req.user.programme_name,
+//       DEPARTMENT: req.user.department_name,
+//       SCHOOL: req.user.school_name
+//     },
+
+//     path: './public/docs/' + fileName
+//   }
+//   pdf.create(document, options)
+//     .then(console.log('pdf-success'))
+//     .catch(e => console.log(e));
+
+//   let filePath = '\\docs\\' + fileName;
+//   // console.log(filePath);
+//   return filePath;
+// }
 //=============================================================================================================
+
+const genPDF = async (req, res, next) => {
+
+  const doc = new PDFDocument;
+
+  const fileName = await req.user.first_name + '_' + req.user.registration_number + '.pdf';
+  doc.pipe(fs.createWriteStream('./public/docs/' + fileName));
+
+  let filepath = '\\docs\\' + fileName;
+  console.log(filepath);
+
+
+  doc.fontSize(16);
+  doc.text("JOMO KENYATTA UNIVERSITY OF AGRICULTURE AND TECHNOLOGY", {
+    width: 410,
+    align: 'center'
+  }
+  );
+
+  doc.moveDown(0.5).fontSize(12);
+  doc.text("P.O BOX 62000,00200, Nairobi, Tel: +254-020-892223/4, 891198,891566", {
+    width: 410,
+    align: 'center'
+  }
+  );
+  doc.moveDown(0.5).fontSize(12);
+  doc.text("Fax:8907997, Email:itdeptkarencampus@jkuat.ac.ke", {
+    width: 410,
+    align: 'center'
+  }
+  );
+  doc.moveDown(0.5);
+  doc.text("KAREN CAMPUS", {
+    width: 410,
+    align: 'center'
+  }
+  );
+  doc.moveDown(0.5).fontSize(14);
+  doc.text("DEPARTMET OF " + req.user.department_name, {
+    width: 410,
+    align: 'center'
+  }
+  );
+  doc.moveDown().moveTo(0, 90)
+    .lineTo(0, 200)
+    .lineTo(700, 200)
+    .stroke();
+
+  doc.moveDown().fontSize(12);
+  doc.text("JKU/O3/APS&IT/STU/9K", {
+    width: 410,
+    align: 'left'
+  }
+  );
+  doc.moveDown(0.5).fontSize(14);
+  doc.text("TO WHOM IT MAY CONCERN", {
+    width: 410,
+    align: 'center'
+  }
+  );
+
+  doc.moveDown(0.5).fontSize(14)
+    ;
+  doc.text("SUB: INDUSTRIAL ATTACHMENT FOR " + req.user.first_name + " " + req.user.last_name + " " + req.user.other_name, {
+    width: 410,
+    align: 'left',
+    underline: 'true'
+  }
+  );
+  doc.moveDown(0.3).fontSize(14);
+  doc.text("REG.NO: " + req.user.registration_number, {
+    width: 410,
+    align: 'left',
+    underline: 'true'
+  }
+  );
+
+  doc.font('Times-Roman', 13)
+    .moveDown()
+    .text("This is to certify that the above named is a student at the Jomo Kenyatta university of agriculture and Technology, Karen Campus pursuing " + req.user.programme_name + ". A programme in the Department of " + req.user.department_name + "; school of" + req.user.school_name + ".",
+      {
+        width: 410,
+        align: 'justify',
+        height: 300,
+        ellipsis: true
+      });
+
+  doc.moveDown()
+    .font('Times-Roman', 13)
+    .text("One of the requrements of the programme is a three month Industial Attachment for every student. The attachment is ment to expose the students to real work environments and enable them to apply concepts, issues and skills learnt in class.", {
+      width: 412,
+      align: 'justify',
+      height: 300,
+      ellipsis: true
+    });
+
+  doc.moveDown()
+    .font('Times-Roman', 13)
+    .text("The department will be gratefull if you offer an attachment opportunity to " + req.user.first_name + " " + req.user.last_name + " in your organisation for three months.", {
+      width: 412,
+      align: 'justify',
+      height: 300,
+      ellipsis: true
+    });
+
+  doc.moveDown()
+    .font('Times-Roman', 13)
+    .text("Any neccesarry assistance accorded to the student will be highly appreciated", {
+      width: 412,
+      align: 'left',
+      height: 300,
+      ellipsis: true
+    });
+
+  doc.moveDown()
+    .font('Times-Bold', 13)
+    .text("MR.MORRICE MBAO");
+
+  doc.moveDown(0.3)
+    .fontSize(14)
+    .text("ASSOCIATE CHAIR PERSON", {
+      bold: "bold"
+    });
+
+  doc.moveDown(0.3)
+    .fontSize(14)
+    .text("APS & " + req.user.department_name);
+
+  doc.end();
+  return filepath;
+}

@@ -1,6 +1,7 @@
+API/
 node_modules/
 .prettierrc
-API/*
-.prettierignore
 public/docs/*
 public/uploads/*
+.env
+.prettierignore

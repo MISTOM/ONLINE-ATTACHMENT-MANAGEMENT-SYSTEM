@@ -5,6 +5,7 @@
     <%- include('./partials/_head'); %>
   </head>
   
+  <div class="overlay2"></div>
   <div class="overlay"></div>
   <body class="bg-light bgImg">
     
@@ -12,7 +13,9 @@
     <div class="container">
       <h1><%= messages %></h1>
       <% if (messages.length > 0) { %>
-        <div class="alert alert-danger"><%= messages %></div>
+        <% for (let i in messages){ %>
+         <div class="alert alert-danger"><%= messages[i] %></div>
+         <% } %>
     <% } %>
   
       <form action="/authentication" method="POST" class="needs-validation" novalidate>
@@ -22,7 +25,7 @@
           <label for="username" class="text-light" >Username:</label>
           <input type="text" name="username" id="uname" class="form-control" placeholder="Username..." required value="<%=  %>">
           <div class="valid-feedback">OK</div>          
-          <div class="invalid-feedback">Please Isnsert your UserName</div>
+          <div class="invalid-feedback">Please Insert your UserName</div>
         </div>
         
         <div class="form-group">

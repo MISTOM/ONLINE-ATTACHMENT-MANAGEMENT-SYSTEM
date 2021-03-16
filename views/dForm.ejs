@@ -2,12 +2,18 @@
 <html lang="en">
   <head>
     <%- include('./partials/_head') %>
+    <style type="text/css">
+    .custom-file-label{
+      left:1em;
+      right: 1em;
+    }
+    </style>
     <title>OnlineAMS</title>
   </head>
 <body style="background-color: #555;">
   <nav class="navbar navbar-expand-sm navbar-dark green darken-4">
-    <a class="navbar-brand" href="#"><strong>G-L</strong></a>
-      <a class="text-light" href="#"><strong>GET_LETTER</strong></a>
+    <a class="navbar-brand" href="#"><strong>OAMS</strong></a>
+      <a class="text-light" href="#"><strong>ONLINE ATTACHMENT MANAGEMENT SYSTEM</strong></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-6"
       aria-controls="navbarSupportedContent-6" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -30,21 +36,21 @@
       </ul>
     </div>
   </nav>    
-  <div class="menu">
+  <div class="menu active">
     <ul>
         <li><a class="item" href="/dashboard">Home</a></li>
         <li><a class="item" href="/dashboard/e-logbook">E-Logbook</a></li>
         <li><a class="item text-light" href="/dashboard/dForm">Submit</a></li>
     </ul>
     </div>
-  <section class="container-fluid board">
+  <section class="container-fluid board active">
     <header class="container transparent header1">
       <em class="icon"></em>
     </header>
 
-    <main class="row">
-      <div class="container">
-        <form action="/dashboard/attachfrm" method="POST" enctype="multipart/form-data">
+    <main>
+      <div>
+        <form action="/dashboard/attachfrm" method="POST" enctype="multipart/form-data" class="mx-auto form">
         <% if(user.institution_id !== null && user.approved == 0){ %>
           <div class="row h-100">
           <article class="col my-auto text-md-center">
@@ -63,7 +69,8 @@
 
       <% }else { %>
         <h4 class="text-center">Please fill in the form and attach the letter from institution below.</h4>
-        <div class="mx-auto">
+        <hr class="green darken-2">
+        <div class="mx-auto mform">
             
             <div class="form-group">
               <input type="text" name="institution" id="institution" class="form-control" required />
@@ -110,28 +117,33 @@
               </div> <%= typeof msg !='undefined' ? msg: ''%>
 
               <div class="form-group col-lg-6">
-              <textarea class="form-control" name="moreInfo" id="moreInfo" placeholder="optional..."></textarea> 
+              <textarea class="form-control" rows="1" name="moreInfo" id="moreInfo" placeholder="optional..."></textarea> 
               <label class="form-label" for="txtArea">Additional Information</label>
               </div>
             </div>
 
             <h4> Please Fill in Your Supervisors Details</h4>
-            <div class="col">
+            <hr class="green darken-2">
               
-              <input type="text" name="supFirstName" id="supFirstName" class="form-control form-control-sm" required />
-              <label class="form-label" for="supFirstName">First Name</label>
-          
-              <input type="text" name="supLastName" id="supLastName" class="form-control form-control-sm" required />
-              <label class="form-label" for="supLastName">Last Name</label>
-        
               <div class="form-group">
-              <input type="email" name="supEmail" id="supEmail" class="form-control form-control-sm" required />
+              <input type="text" name="supFirstName" id="supFirstName" class="form-control form-control" required />
+              <label class="form-label" for="supFirstName">First Name</label>
+              </div>
+
+              <div class="form-group">
+              <input type="text" name="supLastName" id="supLastName" class="form-control form-control" required />
+              <label class="form-label" for="supLastName">Last Name</label>
+              </div>  
+
+              <div class="form-group">
+              <input type="email" name="supEmail" id="supEmail" class="form-control form-control" required />
               <label class="form-label" for="supEmail">Email</label>
               </div>
-          
-              <input type="number" name="supContact" id="supContact" class="form-control form-control-sm" required />
+
+              <div class="form-group">
+              <input type="number" name="supContact" id="supContact" class="form-control form-control" required />
               <label class="form-label" for="supContact">Contact</label>
-            </div>
+              </div>
           </div>
 
             <% if(user.institution_id == null) { %>

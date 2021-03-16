@@ -49,7 +49,8 @@ router.get("/", funs.dView);
 router.get("/dForm", funs.dForm);
 router.get("/e-logbook", funs.Elogbook);
 router.get("/admin", control, funs.dAdmin);
-router.get("/admin/profileView/(:id)", funs.profilePageView)
+router.get("/admin/profileView/(:id)", funs.profilePageView);
+router.get("/landing", (req, res, next) => { res.render('landing') })
 
 router.get("/admin/approve/(:id)", funs.approveCtrl);
 router.get("/admin/reject/(:id)", funs.rejectCtrl);

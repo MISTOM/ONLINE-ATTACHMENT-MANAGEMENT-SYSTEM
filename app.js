@@ -6,8 +6,9 @@ const createError = require("http-errors")
   , bodyParser = require("body-parser")
   , flash = require("connect-flash")
   , session = require("express-session")
-  , expressMessages = require("express-messages");
-
+  , expressMessages = require("express-messages")
+  , dotenv = require("dotenv");
+dotenv.config()
 const passport = require("passport");
 
 //EXPRESS INIT

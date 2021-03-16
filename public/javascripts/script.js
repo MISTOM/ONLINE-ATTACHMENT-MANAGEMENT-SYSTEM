@@ -4,15 +4,32 @@ const board2 = document.querySelector(".board2");
 const menu = document.querySelector(".menu");
 const header = document.querySelector("header");
 // const inputs = document.querySelectorAll(".form-control");
-toggle.addEventListener("click", ()=>{
+toggle.addEventListener("click", () => {
     toggle.classList.toggle("active");
     menu.classList.toggle("active");
     header.classList.toggle("active");
     board2.classList.toggle("active");
 });
-toggle.addEventListener("click", ()=>{
+toggle.addEventListener("click", () => {
     board.classList.toggle("active");
 });
+
+// let small = window.matchMedia("(max-width: 800px)")
+// function updateWindowSize(small) {
+
+//     if (small.matches) {
+//         board.classList.remove("active");
+//         board2.classList.remove("active");
+//         toggle.classList.remove("active");
+//     } else {
+//         board.classList.add("active");
+//         board2.classList.add("active");
+//         toggle.classList.add("active");
+//     }
+// }
+// updateWindowSize(small)
+
+// window.addEventListener("resize", updateWindowSize);
 
 
 
@@ -29,6 +46,6 @@ toggle.addEventListener("click", ()=>{
 //         inputs.classList.add('form-control-md');
 //     }
 //   }
-  
+
 //   myFunction(x); // Call listener function at run time
 //   x.addListener(myFunction); // Attach listener function on state changes
