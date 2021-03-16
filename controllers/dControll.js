@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const pdf = require("pdf-creator-node");
 const nodemailer = require("nodemailer");
 const options = require("./helpers/options");
 const conn = require("../lib/db.js");
@@ -388,7 +387,13 @@ const genPDF = async (req, res, next) => {
   const doc = new PDFDocument;
 
   const fileName = await req.user.first_name + '_' + req.user.registration_number + '.pdf';
-  doc.pipe(fs.createWriteStream('./public/docs/' + fileName));
+
+  //check if directory exists
+  let dir = 'public/docs/';
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+  doc.pipe(fs.createWriteStream(dir + fileName));
 
   let filepath = '\\docs\\' + fileName;
   console.log(filepath);

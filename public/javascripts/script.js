@@ -14,22 +14,22 @@ toggle.addEventListener("click", () => {
     board.classList.toggle("active");
 });
 
-// let small = window.matchMedia("(max-width: 800px)")
-// function updateWindowSize(small) {
+let small = window.matchMedia("(max-width: 800px)")
+function updateWindowSize(small) {
 
-//     if (small.matches) {
-//         board.classList.remove("active");
-//         board2.classList.remove("active");
-//         toggle.classList.remove("active");
-//     } else {
-//         board.classList.add("active");
-//         board2.classList.add("active");
-//         toggle.classList.add("active");
-//     }
-// }
-// updateWindowSize(small)
+    if (small.matches) {
+        board.classList.remove("active");
+        board2.classList.remove("active");
+        toggle.classList.remove("active");
+    } else {
+        board.classList.add("active");
+        board2.classList.add("active");
+        toggle.classList.add("active");
+    }
+}
+updateWindowSize(small)
 
-// window.addEventListener("resize", updateWindowSize);
+window.addEventListener("resize", updateWindowSize);
 
 
 
