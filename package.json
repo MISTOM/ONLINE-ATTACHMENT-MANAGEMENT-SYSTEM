@@ -12,7 +12,7 @@
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
     "ejs": "~2.6.1",
-    "express": "~4.16.1",
+    "express": "^4.16.4",
     "express-flash": "^0.0.2",
     "express-messages": "^1.0.1",
     "express-session": "^1.17.1",

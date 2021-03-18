@@ -4,11 +4,11 @@ const createError = require("http-errors")
   , cookieParser = require("cookie-parser")
   , logger = require("morgan")
   , bodyParser = require("body-parser")
-  , flash = require("connect-flash")
+  , flash = require("express-flash")
   , session = require("express-session")
   , expressMessages = require("express-messages")
   , dotenv = require("dotenv");
-dotenv.config()
+dotenv.config();
 const passport = require("passport");
 
 //EXPRESS INIT
@@ -21,22 +21,22 @@ app.set("view engine", "ejs");
 app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieParser("80808080"));
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(flash());
 app.use(
   session({
     name: "O A M S",
     secret: "80808080",
     resave: true,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: { maxAge: 3600000 }//one hr
   })
 );
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
 
 app.use(function (req, res, next) {
   res.locals.message = expressMessages;
@@ -55,8 +55,6 @@ app.use("/dashboard", dashboard);
 /**API ROUTE =============================================*/
 app.use("/api", API)
 /**======================================================= */
-
-
 
 // catch 404//
 app.use(function (req, res, next) {

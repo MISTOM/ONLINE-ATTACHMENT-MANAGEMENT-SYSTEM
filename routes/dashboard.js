@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const conn = require("../lib/db.js");
+
 const path = require("path");
 const fs = require("fs");
 // const flash = require('express-flash');

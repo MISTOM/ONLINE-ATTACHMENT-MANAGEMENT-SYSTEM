@@ -11,12 +11,9 @@
     
     <div class="whole">
     <div class="container">
-      <h1><%= messages %></h1>
-      <% if (messages.length > 0) { %>
-        <% for (let i in messages){ %>
-         <div class="alert alert-danger"><%= messages[i] %></div>
-         <% } %>
-    <% } %>
+      <% if (messages.error){ %>
+     <div class="alert alert-danger"><%= messages.error %></div>
+        <% } %>
   
       <form action="/authentication" method="POST" class="needs-validation" novalidate>
         <h3 class="display-4 text-light"><%= title%></h3>

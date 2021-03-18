@@ -2,7 +2,6 @@ const express = require("express");
 const conn = require("../lib/db");
 const passport = require("passport");
 const passportLocal = require("passport-local");
-// const { control } = require("../controllers/routeControll");
 
 const router = express.Router();
 
@@ -23,10 +22,9 @@ function control(req, res, next) {
 //______________________________________________________________________
 
 /*-----------------------------------ROUTES-- */
-router.get("/", control, function (req, res, next) {
+router.get("/", control, (req, res, next) => {
   res.render("index", {
     title: "LOGIN",
-    messages: req.flash('loginMessage')
   });
 });
 
@@ -37,9 +35,7 @@ router.post("/authentication",
   passport.authenticate("local", {
     successRedirect: "/dashboard",
     failureRedirect: "/",
-    successFlash: true,
-    failureFlash: true,
-    passReqToCallback: true
+    failureFlash: true
   })
 );
 
@@ -49,7 +45,7 @@ passport.use(
     {
       usernameField: "username",
       passwordField: "password",
-      // passReqToCallback : true //pass to cb
+      // passReqToCallback: true //pass to cb
     },
     (username, password, done) => {
       // callback with username and password from the form
@@ -58,11 +54,11 @@ passport.use(
         (err, rows) => {
           if (err) return done(err);
           if (!rows.length) {
-            return done(null, false, { message: "No user found." });
+            return done(null, false, { message: "Incorrect Username or Password! Please try again." });
           }
           ///////////////USER FOUND WRONG PASSWORD///////////////////
           if (!(rows[0].password == password)) {
-            return done(null, false, { message: "Oops! Wrong password." });
+            return done(null, false, { message: "Incorrect password! Please try again." });
           } else {
             return done(null, rows[0]);
           }
