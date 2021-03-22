@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const conn = require("../lib/db.js");
 const path = require("path");
 const fs = require("fs");
 // const flash = require('express-flash');
@@ -8,7 +8,7 @@ const fs = require("fs");
 const funs = require("../controllers/dControll");
 
 const { control } = require("../controllers/routeControll");
-const { check, validationResult, matchedData } = require("express-validator");
+const { check, validationResult, matchedData, Result } = require("express-validator");
 
 //==============================MULTER CONFIGURATION=========================
 
@@ -45,7 +45,7 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 
 /------------------ROUTES--------------------/
-router.get("/", funs.dView);
+router.get("/", funs._2faValidation, funs.dView);
 router.get("/dForm", funs.dForm);
 router.get("/e-logbook", funs.Elogbook);
 router.get("/admin", control, funs.dAdmin);
@@ -66,10 +66,30 @@ router.get("/deactivate2FA/(:id)", funs.deactivate2FA)
 
 
 router.get("/logout", (req, res, next) => {
-  req.session.destroy(() => {
-    req.logOut();
-    res.redirect('/');
-  });
+  if (req.user == undefined) return res.redirect('/')
+  let id = req.user.user_id
+  if (req.user.is2faEnabled) {
+
+    conn.query(`UPDATE users SET 2faCode = -1 WHERE user_id =${id}`, (err, result) => {
+      if (err) {
+        console.log("error whole logging out", result);
+        throw err;
+      } else {
+        req.session.destroy(() => {
+          console.log("logging out!")
+          req.logOut();
+          res.redirect('/');
+        });
+      }
+    });
+
+  } else {
+    req.session.destroy(() => {
+      console.log("logging out!")
+      req.logOut();
+      res.redirect('/');
+    });
+  }
 })
 
 module.exports = router;

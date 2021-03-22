@@ -22,10 +22,15 @@ function formatDate(date) {
 }
 /_________________________________________________________/
 
+exports._2faValidation = (req, res, next) => {
+  if (req.user == undefined) return res.redirect('/')
+  else if (req.user.is2faEnabled) return res.render("2FAuthenticate", { user: req.user })
+  else return next();
+}
+
+
 exports.dView = async (req, res, next) => {
-  if (req.user == undefined) {
-    res.redirect('/')
-  } else if (req.user.role_id === 1) {
+  if (req.user.role_id === 1) {
     res.redirect('/dashboard/admin')
   } else if (req.user.role_id === 2) {
     res.redirect('/dashboard/supervisor');

@@ -65,7 +65,7 @@ data-_2faroute="<% if(user.is2faEnabled){ %>deactivate2FA<% }else{ %>activate2FA
       let alertbox = document.getElementById("alertFor2fa");  
       let id = document.getElementById("2faData").dataset.userid;
       let _2faroute = document.getElementById("2faData").dataset._2faroute;
-      let url = `${process.env.HOST}${process.env.PORT}/dashboard/${_2faroute}/${id}`;
+      let url = `http://127.0.0.1:3000/dashboard/${_2faroute}/${id}`;
       $.ajax({
           url: url,
           type: 'GET',
