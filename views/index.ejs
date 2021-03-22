@@ -12,7 +12,10 @@
     <div class="whole">
     <div class="container">
       <% if (messages.error){ %>
-     <div class="alert alert-danger"><%= messages.error %></div>
+     <div class="alert alert-danger alert-dismissable text-center mt-0">
+       <span><%= messages.error %></span>
+       <button type="button" class="close" data-dismiss="alert" >&times;</button>
+      </div>
         <% } %>
   
       <form action="/authentication" method="POST" class="needs-validation" novalidate>

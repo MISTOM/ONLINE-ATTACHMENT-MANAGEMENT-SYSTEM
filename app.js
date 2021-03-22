@@ -29,7 +29,7 @@ app.use(
   session({
     name: "O A M S",
     secret: "80808080",
-    resave: true,
+    resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 3600000 }//one hr
   })

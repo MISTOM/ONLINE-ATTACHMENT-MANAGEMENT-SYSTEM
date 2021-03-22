@@ -103,8 +103,6 @@ exports.profilePageView = (req, res, next) => {
   );
 }
 
-
-
 exports.Elogbook = (req, res, next) => {
   if (req.user == undefined) { res.redirect('/') } else {
 
@@ -130,7 +128,8 @@ exports.Elogbook = (req, res, next) => {
             res.render('e-logbook', {
               user: req.user,
               rows: rows1,
-              allrows: rows2
+              allrows: rows2,
+              msg: req.flash("msg")
             });
           })
         }
@@ -152,6 +151,7 @@ exports.logbook = (req, res, next) => {
     console.log(result);
     // sendEmail("kigardetom2001@gmail.com", `<h1>hello there</h1> <h3>${dayslog}</h3>`, "oams", "this is the body")
     //   .catch(e => { console.log(e) });
+    req.flash("msg", "Log Successfuly submitted.")
     res.redirect('/dashboard/e-logbook');
   });
 }

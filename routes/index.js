@@ -28,7 +28,7 @@ router.get("/", control, (req, res, next) => {
   });
 });
 
-/*-----------------------------LOGIN AUTH-----------------------*/
+/*_____________________________________________LOGIN AUTHENTICATION______________________________*/
 let LocalStrategy = passportLocal.Strategy;
 
 router.post("/authentication",

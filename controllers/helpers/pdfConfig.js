@@ -27,6 +27,12 @@ exports.genPDF = async (req, res, next) => {
 
   const fileName = await req.user.first_name + '_' + req.user.registration_number + '.pdf';
 
+  /_________________________STRING-CASE-EDITS_____________________/
+  let capitalize = string => { return `${string}`.toUpperCase() };
+
+  let smallize = string => { return `${string}`.toLowerCase(); }
+
+  let titleCase = string => { return `${string}`.trim().toLowerCase().replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase()))); }
   //check if directory exists
   let dir = 'public/docs/';
   if (!fs.existsSync(dir)) {
@@ -66,13 +72,13 @@ exports.genPDF = async (req, res, next) => {
     );
   doc
     .moveDown(0.5)
-    .text("DEPARTMET OF " + req.user.department_name, {
+    .text("DEPARTMET OF " + capitalize(req.user.department_name), {
       align: 'center'
     }
     );
-  doc.moveDown().moveTo(0, 90)
-    .lineTo(0, 200)
-    .lineTo(700, 200)
+  doc.moveDown().moveTo(0, 195)
+    .lineTo(0, 195)
+    .lineTo(700, 195)
     .stroke();
 
   doc
@@ -90,14 +96,14 @@ exports.genPDF = async (req, res, next) => {
 
   doc
     .moveDown(0.5)
-    .text("SUB: INDUSTRIAL ATTACHMENT FOR " + req.user.first_name + " " + req.user.last_name + " " + req.user.other_name, {
+    .text("SUB: INDUSTRIAL ATTACHMENT FOR " + capitalize(req.user.first_name) + " " + capitalize(req.user.last_name) + " " + capitalize(req.user.other_name), {
       align: 'left',
       underline: 'true'
     }
     );
   doc
     .moveDown(0.3)
-    .text("REG.NO: " + req.user.registration_number, {
+    .text("REG.NO: " + capitalize(req.user.registration_number), {
       align: 'left',
       underline: 'true'
     }
@@ -106,7 +112,7 @@ exports.genPDF = async (req, res, next) => {
   doc
     .font('Times-Roman', 13)
     .moveDown()
-    .text("This is to certify that the above named is a student at the Jomo Kenyatta university of agriculture and Technology, Karen Campus pursuing " + req.user.programme_name + ". A programme in the Department of " + req.user.department_name + "; school of" + req.user.school_name + ".", {
+    .text("This is to certify that the above named is a student at the Jomo Kenyatta university of agriculture and Technology, Karen Campus pursuing " + req.user.programme_name + ". A programme in the Department of " + req.user.department_name + "; school of " + titleCase(req.user.school_name) + ".", {
       align: 'justify',
       height: 300,
       ellipsis: true
@@ -149,7 +155,7 @@ exports.genPDF = async (req, res, next) => {
 
   doc
     .moveDown(0.3)
-    .text("APS & " + req.user.department_name);
+    .text("APS & " + capitalize(req.user.department_name));
 
   doc.end();
   return filepath;
