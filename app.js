@@ -31,7 +31,8 @@ app.use(
     secret: "80808080",
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 3600000 }//one hr
+    cookie: { maxAge: 3600000 },//one hr
+    SameSite: "strict"
   })
 );
 
@@ -47,6 +48,7 @@ app.use(function (req, res, next) {
 const indexRouter = require("./routes/index");
 const dashboard = require("./routes/dashboard");
 const API = require("./API/alpha");
+const { strict } = require("assert");
 
 app.use("/", indexRouter);
 app.use("/dashboard", dashboard);

@@ -277,6 +277,12 @@ header h3 {
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
 }
+._2faAlert {
+    position: fixed;
+    bottom: 5px;
+    right:1em;
+    width: 30%;
+}
 
 .display-4{
   transition: 0.3ms all;

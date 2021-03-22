@@ -19,9 +19,15 @@
       <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-6" data-toggle="dropdown" aria-haspopup="false"
-            aria-expanded="false"><%= cred.first_name %> <%= cred.last_name%></a>
+            aria-expanded="false"><%= user.first_name %> <%= user.last_name%></a>
           <div class="dropdown-menu dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-6">
-            <a class="dropdown-item" data-toggle="modal" href="#askmodal">Enable 2-Factor Authentication</a>
+            <a class="dropdown-item" data-toggle="modal" href="#askmodal">
+              <% if(user.is2faEnabled){ %>
+              Disable 2-Factor Authentication
+              <% }else{ %>
+              Enable 2-Factor Authentication
+              <% } %>
+            </a>
             <a class="dropdown-item" href="/dashboard/logout">Logout</a> 
           </div>
         </li>
@@ -53,10 +59,12 @@
     </main>
   </section>
 
-  <%- include('2-F-A') %>
-
-
-<footer> <%- include('./partials/_foot') %> </footer>
+  
+  
+<footer>
+ <%- include('2-F-A') %>
+ <%- include('./partials/_foot') %>
+</footer>
 <!-- <script>
 	$(document).ready(function(){
 		$("#askmodal").modal('show');

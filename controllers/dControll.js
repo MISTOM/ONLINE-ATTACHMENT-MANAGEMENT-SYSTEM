@@ -33,7 +33,7 @@ exports.dView = async (req, res, next) => {
     console.log("rendering std dashboard...");
     let link = await genPDF(req, res, next);
     res.render("dashboard", {
-      cred: req.user,
+      user: req.user,
       link: link
     });
   };
@@ -64,7 +64,7 @@ exports.dAdmin = (req, res, next) => {
       } else {
         // console.log("the actual-----------", rows);
         res.render("admin", {
-          cred: req.user,
+          user: req.user,
           data: rows
         });
       }
@@ -285,7 +285,8 @@ exports.supervisor = (req, res, next) => {
     }
     res.render('supervisor', {
       user: req.user,
-      rows: rows
+      rows: rows,
+      msg: req.flash("message")
     })
   });
 }
@@ -300,10 +301,34 @@ exports.supComment = (req, res, next) => {
   conn.query(q, (err, result) => {
     if (err) throw err;
     console.log(result);
+    req.flash("message", "Comment added successfully.")
     res.redirect('/dashboard/supervisor');
   })
 }
 
+//=================================2-FACTOR AUTHENTICATION===========================================
+exports.activate2FA = (req, res, next) => {
+  const id = req.params.id;
+  conn.query(`UPDATE users SET is2faEnabled = 1 WHERE user_id = ${id}`,
+    (err, result) => {
+      if (err) {
+        res.json("failed"); throw err;
+      }
+      res.json("activated");
+      // console.log(result);
+    });
+}
+
+exports.deactivate2FA = (req, res, next) => {
+  const id = req.params.id;
+  conn.query(`UPDATE users SET is2faEnabled = 0 WHERE user_id = ${id}`,
+    (err, result) => {
+      if (err) {
+        res.json("failed"); throw err;
+      }
+      res.json("disabled");
+    });
+}
 
 //==================================================NODEMAILER=======================================
 "use strict";

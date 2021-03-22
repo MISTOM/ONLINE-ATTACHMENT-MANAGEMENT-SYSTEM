@@ -59,7 +59,11 @@ router.post("/attachfrm", upload.single("attachFile"), funs.attachForm);
 router.post("/e-logbook", funs.logbook);
 
 router.get("/supervisor", funs.supervisor);
-router.post("/supervisorlogs", funs.supComment)
+router.post("/supervisorlogs", funs.supComment);
+
+router.get("/activate2FA/(:id)", funs.activate2FA);
+router.get("/deactivate2FA/(:id)", funs.deactivate2FA)
+
 
 router.get("/logout", (req, res, next) => {
   req.session.destroy(() => {
