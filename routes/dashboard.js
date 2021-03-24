@@ -43,7 +43,6 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 //==============================================================================
 
-
 /------------------ROUTES--------------------/
 router.get("/", funs._2faValidation, funs.dView);
 router.get("/dForm", funs.dForm);
@@ -61,22 +60,23 @@ router.post("/e-logbook", funs.logbook);
 router.get("/supervisor", funs.supervisor);
 router.post("/supervisorlogs", funs.supComment);
 
+
 router.get("/activate2FA/(:id)", funs.activate2FA);
-router.get("/deactivate2FA/(:id)", funs.deactivate2FA)
+router.get("/deactivate2FA/(:id)", funs.deactivate2FA);
+router.post("/validate2faCode", funs.validate2faCode);
 
 
 router.get("/logout", (req, res, next) => {
-  if (req.user == undefined) return res.redirect('/')
-  let id = req.user.user_id
+  if (req.user == undefined) return res.redirect('/');
+  let id = req.user.user_id;
+
   if (req.user.is2faEnabled) {
 
-    conn.query(`UPDATE users SET 2faCode = -1 WHERE user_id =${id}`, (err, result) => {
-      if (err) {
-        console.log("error whole logging out", result);
-        throw err;
-      } else {
+    conn.query(`UPDATE users SET _2faCode = -1 WHERE user_id =${id}`, (err, result) => {
+      if (err) { console.log("error whole logging out", result); throw err; }
+      else {
         req.session.destroy(() => {
-          console.log("logging out!")
+          console.log("2fa active user logging out!")
           req.logOut();
           res.redirect('/');
         });
@@ -85,7 +85,7 @@ router.get("/logout", (req, res, next) => {
 
   } else {
     req.session.destroy(() => {
-      console.log("logging out!")
+      console.log("2fa disbbled user logging out!")
       req.logOut();
       res.redirect('/');
     });

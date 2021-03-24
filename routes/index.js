@@ -7,16 +7,13 @@ const router = express.Router();
 
 //______________________________________________________________________
 function control(req, res, next) {
-  if (req.user === undefined) {
-    return next()
+  if (req.user === undefined) return next();
+  if (req.user.role_id === 1) {
+    res.redirect('/dashboard/admin');
+  } else if (req.user.role_id === 2) {
+    res.redirect('/dashboard/supervisor')
   } else {
-    if (req.user.role_id === 1) {
-      res.redirect('/dashboard/admin');
-    } else if (req.user.role_id === 2) {
-      res.redirect('/dashboard/supervisor')
-    } else {
-      res.redirect('/dashboard');
-    }
+    res.redirect('/dashboard');
   }
 }
 //______________________________________________________________________

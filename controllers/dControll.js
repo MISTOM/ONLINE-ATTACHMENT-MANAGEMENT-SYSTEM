@@ -2,6 +2,7 @@ const fs = require("fs")
   , nodemailer = require("nodemailer")
   , conn = require("../lib/db.js")
   , { genPDF } = require("./helpers/pdfConfig");
+const { clearTimeout } = require("timers");
 
 /________TODAY____________-/
 let sdate = new Date();
@@ -22,12 +23,99 @@ function formatDate(date) {
 }
 /_________________________________________________________/
 
+//=================================2-FACTOR AUTHENTICATION===========================================
+
+function send2FACode(user) {
+  const code = Math.floor(100000 + Math.random() * 900000);
+  console.log(code);
+
+  conn.query(`UPDATE users SET _2faCode = ${code} WHERE user_id = ${user.user_id}`,
+    (err, result) => {
+      if (err) throw err;
+      console.log("code inserted into db", result);
+    })
+
+  let emailbody = `<h1> Hello ${user.first_name}</h1><br>
+  <h3>Secure your Account with 2-Factor Authentication.</h3><hr>
+  <h3>Your one time code is <pre>${code}</pre> Valid for one minute</h3>
+  <p>If you did not enable 2FA, please ignore this email and <a href="#">Secure your account</a></p>
+  <small>Thank You; Regards OAMS Management.</small>`;
+  sendEmail(user.user_email, emailbody, `Get Your Code`, `Mail Text`);
+
+  clearCodeTimeout(user);
+}
+
+//___code clear from db timeout id___
+let dbTimeout;
+function clearCodeTimeout(user) {
+
+  dbTimeout = setTimeout(clearFromDb, 60000, user);
+
+  function clearFromDb(user) {
+    conn.query(`UPDATE users SET _2faCode = -1 WHERE user_id = ${user.user_id}`,
+      (err, result) => {
+        if (err) { console.log("ERR on clearing code from db", result); throw err } else { console.log("2fa code cleared from db after 20 seconds") };
+
+      })
+  }
+}
+
+exports.validate2faCode = (req, res, next) => {
+  const code = req.body.code;
+  console.log(Number.isInteger(122))
+  if (code > 0) {
+    console.log(code);
+    conn.query(`SELECT _2faCode FROM users WHERE user_id = ${req.user.user_id}`,
+      (err, rows) => {
+        if (err) throw err; console.log(rows[0]._2faCode);
+        if (rows[0]._2faCode == code) {
+          clearTimeout(dbTimeout)
+          conn.query(`UPDATE users SET _2faCode = 0 WHERE user_id = ${req.user.user_id}`,
+            (err, result) => {
+              if (err) throw err;
+              res.json("2FAValid");
+            })
+        } else {
+          res.json("Please check your email for the code.");
+        }
+      })
+  } else {
+    return res.json("Please check your email for the code.")
+  }
+
+}
+
 exports._2faValidation = (req, res, next) => {
-  if (req.user == undefined) return res.redirect('/')
-  else if (req.user.is2faEnabled) return res.render("2FAuthenticate", { user: req.user })
+  if (req.user == undefined) return res.redirect('/');
+  if (req.user.is2faEnabled && req.user._2faCode == -1 || req.user._2faCode !== 0) {
+    send2FACode(req.user); res.render("2FAuthenticate", { user: req.user })
+  }
   else return next();
 }
 
+exports.activate2FA = (req, res, next) => {
+  const id = req.params.id;
+  conn.query(`UPDATE users SET is2faEnabled = 1 WHERE user_id = ${id}`,
+    (err, result) => {
+      if (err) {
+        res.json("failed"); throw err;
+      }
+      res.json("activated");
+      // console.log(result);
+    });
+}
+
+exports.deactivate2FA = (req, res, next) => {
+  const id = req.params.id;
+  conn.query(`UPDATE users SET is2faEnabled = 0 WHERE user_id = ${id}`,
+    (err, result) => {
+      if (err) {
+        res.json("failed"); throw err;
+      }
+      res.json("disabled");
+    });
+}
+//============================================================================================
 
 exports.dView = async (req, res, next) => {
   if (req.user.role_id === 1) {
@@ -311,29 +399,6 @@ exports.supComment = (req, res, next) => {
   })
 }
 
-//=================================2-FACTOR AUTHENTICATION===========================================
-exports.activate2FA = (req, res, next) => {
-  const id = req.params.id;
-  conn.query(`UPDATE users SET is2faEnabled = 1 WHERE user_id = ${id}`,
-    (err, result) => {
-      if (err) {
-        res.json("failed"); throw err;
-      }
-      res.json("activated");
-      // console.log(result);
-    });
-}
-
-exports.deactivate2FA = (req, res, next) => {
-  const id = req.params.id;
-  conn.query(`UPDATE users SET is2faEnabled = 0 WHERE user_id = ${id}`,
-    (err, result) => {
-      if (err) {
-        res.json("failed"); throw err;
-      }
-      res.json("disabled");
-    });
-}
 
 //==================================================NODEMAILER=======================================
 "use strict";

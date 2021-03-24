@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>OnlineAMS</title>
+    <%- include('./partials/_head'); %>
+    <style type="text/stylesheet">
+    *{
+        transition: 300 all;
+    }
+    </style>
+  </head>
+  
+  <div class="overlay2"></div>
+  <body class="bg-light bgImg">
+    
+    <div class="container">
+        <div id="_2fauthenticate" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="_2fauthenticate" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Please input the code we've sent to <%= user.user_email%></h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+
+                </div>
+                <form action="/dashboard/validate2faCode" method="POST">
+                <div class="md-form">
+                    <div class="modal-body">
+                        <i class="fa fa-lock prefix"></i>
+                        <input type="number" class="form-control text-center" name="_2facode" id="_2facode" required>
+                        <label for="_2facode text-center">Input the 6 digit code</label>
+                    </div>
+                    <div class="modal-footer">
+                        <p class="text-mutted" id="message">Did not receive code? Click <a href="/dashboard">here</a> to resend</p>
+                        <input type="submit" id="send" class="btn btn-sm btn-outline-green" value="Send">
+                    </div>
+                </div>
+                </form>
+              </div>
+          
+            </div>
+          </div>
+    
+<footer><%- include('./partials/_foot'); %></footer>
+<script type="text/javascript">
+
+const button = document.getElementById('send');
+const message = document.getElementById('message');
+
+
+$(document).ready(function(){        
+    $('#_2fauthenticate').modal('show');
+    
+    $("form").submit(function (e) {
+    let url =/*`http://127.0.0.1:3000/dashboard/validate2faCode`;*/ `http://96.126.122.21/dashboard/validate2faCode`;
+    let user_code = document.getElementById('_2facode').value;
+    let submit = document.getElementById("send");
+    e.preventDefault();
+
+    $.ajax({
+    url: url,
+        type: "POST",
+        crossDomain: true,
+        dataType: 'json',
+        data:{code:user_code},
+        Headers: {'Access-Control_Allow-Origin': '*'},
+        success: function(res, data){
+            console.log(res)
+            function Loading(){
+                button.value = "";
+                button.classList.remove("btn", "green", "btn-light-outline");
+                button.classList.add("spinner-grow","text-muted")
+            }
+            function restore(){
+                button.value = "send";
+                button.classList.add("btn","green", "btn-light-outline");
+                button.classList.remove("spinner-grow","text-muted")
+                message.innerHTML = res + "Did not receive code? Click <a href=\"/dashboard\">here</a> to resend"
+            }
+
+            function redirect() {
+            location.href = "http://96.126.122.21/dashboard";//"http://127.0.0.1:3000/dashboard"
+            }
+
+            if(res == "2FAValid"){
+                Loading();
+                setTimeout(redirect, 1500);
+            }else{
+                Loading();
+                setTimeout(restore, 1500,);
+            }
+        },
+        Error: function(xhr) {
+            console.log(xhr);
+        }
+    });
+    });
+});
+
+</script>
+</body>
+</html>

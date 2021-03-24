@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 04, 2021 at 02:32 PM
+-- Generation Time: Mar 24, 2021 at 05:44 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.3.21
 
@@ -63,13 +63,14 @@ CREATE TABLE `activities_table` (
 --
 
 INSERT INTO `activities_table` (`log_id`, `user_id`, `student_logs`, `supervisors_logs`, `log_date`) VALUES
-(23, 6, 'todays desctiption this ti sthe testsalad salad salad salad salad salsa salsa salsa salsa the quick brown fox jumped over the lazy slepy dog', 'dsafasdcds', '2021-03-02'),
-(24, 3, 'this is the og for hillary keen for today 02/03/2021\r\nthe skills i learnt are this and that', NULL, '2021-03-02'),
-(25, 6, 'today i learnt that the quick brown fox jumps over the lazy sleepy dog.\r\nin addition, Javascript is very interesting.', 'example of supervisor logs', '2021-03-03'),
-(26, 3, 'Object Oriented Programming languages include Java Python C++, C# ETC\r\nThese are high level\r\n', 'GREAT, keep up', '2021-03-03'),
-(27, 3, 'today i learnt that The main difference between object-oriented analysis and other forms of analysis is that in object-oriented approach, requirements are organized around objects, which integrate both data and functions. They are modelled after real-worl', 'are you sure?!', '2021-03-04'),
-(28, 6, 'The primary tasks in object-oriented analysis (OOA) are −\r\n\r\nIdentifying objects\r\nOrganizing the objects by creating object model diagram\r\nDefining the internals of the objects, or object attributes\r\nDefining the behavior of the objects, i.e., object acti', NULL, '2021-03-04'),
-(29, 9, 'log leo hii log', 'good work abel', '2021-03-04');
+(33, 9, 'this is the log of today', 'sds', '2021-03-15'),
+(34, 9, 'fasfsfdd', 'see me', '2021-03-16'),
+(35, 3, 'todays work and logs\r\n', 'this is good work \r\nkeep up \r\nsee you tommorow\r\n', '2021-03-16'),
+(36, 3, 'this is the another day of logging this log book\r\ni learnt that when you switch of the lights, a coin should have 2 sides when the clouds are falling. ', NULL, '2021-03-17'),
+(37, 9, 'If you aren’t sure if you are going to encounter said padding, like when you’re dealing with the inconsistencies of user-generated content, you can include the .trim() method to clean things up before capitalizing:', 'this is good make sure  clean things up before capitalizing:', '2021-03-18'),
+(40, 9, 'here is my logs for the day', NULL, '2021-03-22'),
+(41, 3, 'yet another day doing 2fa and learning about getting mac address and event logs', NULL, '2021-03-23'),
+(42, 9, 'this is the work\r\n', NULL, '2021-03-23');
 
 -- --------------------------------------------------------
 
@@ -138,9 +139,8 @@ CREATE TABLE `institution_info` (
 --
 
 INSERT INTO `institution_info` (`institution_id`, `student_id`, `institution_name`, `location`, `from_date`, `to_date`, `work_position`, `website`, `email_address`, `additional_info`, `approved`, `rejected`, `letter_file`) VALUES
-(26, '3', 's', 'd', '2021-03-02', '2021-04-02', 'd', 'web.com', 'std@d', 'optional text', 1, 0, 'public\\uploads\\Hillary_reg-no-003_1614672141203.pdf'),
-(27, '6', 'a', 's', '2021-03-01', '2021-04-02', 's', 'sdds', 'ee@gg.com', 'option', 1, 0, 'public\\uploads\\Sylvia_reg-no-006_1614674930770.pdf'),
-(28, '9', 'this institution', 'NAIROBI', '2021-03-04', '2021-04-01', 'javascript programer', 'meruclinicsite.org', 'kigardetom2001@gmail.com', 'optional text of this institution', 1, 0, 'public\\uploads\\Abel_reg-no-009_1614862252883.pdf');
+(35, '9', 'Maji ltd', 'Nairobi', '2021-03-15', '2021-04-16', 'Tech inspector', 'maji.co.ke', 'maji@gmail.com', 'This is the company i was talking about', 1, 0, 'Abel_reg-no-009_1615783317706.pdf'),
+(36, '3', 'Kiambere plant', 'Kiambere', '2021-03-16', '2021-04-16', 'it technical', 'kiambere.co.ke', 'kiambere@gmail.com', 'this is the dam located in kiambere .\r\none of the sophisticated dam projects producing thermal energy that powers Kenya', 1, 0, 'Hillary_reg-no-003_1615892184842.pdf');
 
 -- --------------------------------------------------------
 
@@ -162,9 +162,8 @@ CREATE TABLE `institution_supervisor` (
 --
 
 INSERT INTO `institution_supervisor` (`institution_supervisor_id`, `supv_first_name`, `supv_last_name`, `supv_email`, `supv_contact`, `institution_id`) VALUES
-(25, 'ww', 'w', 'w.@ff', 212, '26'),
-(26, 'Sheila', 'Mbao', 'email@gmail.com', 147845858, '27'),
-(27, 'collins', 'munene', 'mell@gmail.com', 789858585, '28');
+(34, 'malenga', 'tom', 'kigardetom2001@gmail.com', 78999995, '35'),
+(35, 'thagana', 'mistom', 'kigardetom2001@gmail.com', 788545696, '36');
 
 -- --------------------------------------------------------
 
@@ -286,29 +285,30 @@ CREATE TABLE `users` (
   `academic_year_id` int(255) DEFAULT NULL,
   `registration_number` varchar(255) DEFAULT NULL,
   `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL,
+  `_2faCode` int(255) NOT NULL DEFAULT 0,
+  `is2faEnabled` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `other_name`, `role_id`, `academic_year_id`, `registration_number`, `username`, `password`) VALUES
-(1, 'Cardinal', 'Tom B', 'Erichsen', 1, NULL, NULL, 'cardinal', 'cardinal123'),
-(2, 'Jamen', 'Erick', 'Taurine', 1, NULL, NULL, 'erick', 'erick123'),
-(3, 'Hillary', 'Keen', 'Cite', 3, 3, 'reg-no-003', 'keen', 'keen123'),
-(4, 'Selina', 'Nursa', 'Mirara', 3, 4, 'reg-no-004', 'nursa', 'nursa123'),
-(5, 'Patrick', 'Munene', 'Odinga', 3, 1, 'reg-no-005', 'odinga', 'odinga123'),
-(6, 'Sylvia', 'Linda', 'Kiragu', 3, 2, 'reg-no-006', 'kiragu', 'kiragu123'),
-(7, 'Salah', 'Loice', 'Kihara', 3, 1, 'reg-no-007', 'loice', 'loice123'),
-(8, 'Shaq', 'Luke', 'Kiambere', 3, 2, 'reg-no-008', 'luke', 'luke123'),
-(9, 'Abel', 'Liland', 'Vision', 3, 3, 'reg-no-009', 'abel', 'abel123'),
-(10, 'Abby', 'Lenny', 'Raquell', 3, 1, 'reg-no-010', 'lenny', 'lenny123'),
-(11, 'Alice', 'Kibanja', 'Maragua', 3, 2, 'reg-no-011', 'alice', 'alice123'),
-(12, 'Sumaya', 'Atiamuga', 'Ngana', 3, 2, 'reg-no-012', 'sumaya', 'sumaya123'),
-(21, 'Sheila', 'Mbao', NULL, 2, NULL, '26', 'Sheila', 'Sheila-Mbao123'),
-(22, 'ww', 'w', NULL, 2, NULL, '25', 'ww', 'ww-w123'),
-(23, 'collins', 'munene', NULL, 2, NULL, '27', 'collins', 'collins-munene123');
+INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `other_name`, `role_id`, `academic_year_id`, `registration_number`, `username`, `password`, `_2faCode`, `is2faEnabled`) VALUES
+(1, 'Cardinal', 'Tom B', 'Erichsen', 1, NULL, NULL, 'cardinal', 'cardinal123', 0, 0),
+(2, 'Jamen', 'Erick', 'Taurine', 1, NULL, NULL, 'erick', 'erick123', 0, 1),
+(3, 'Hillary', 'Keen', 'Cite', 3, 3, 'reg-no-003', 'keen', 'keen123', -1, 1),
+(4, 'Selina', 'Nursa', 'Mirara', 3, 4, 'reg-no-004', 'nursa', 'nursa123', 0, 0),
+(5, 'Patrick', 'Munene', 'Odinga', 3, 1, 'reg-no-005', 'odinga', 'odinga123', 0, 0),
+(6, 'Sylvia', 'Linda', 'Kiragu', 3, 2, 'reg-no-006', 'kiragu', 'kiragu123', 0, 0),
+(7, 'Salah', 'Loice', 'Kihara', 3, 1, 'reg-no-007', 'loice', 'loice123', 0, 0),
+(8, 'Shaq', 'Luke', 'Kiambere', 3, 2, 'reg-no-008', 'luke', 'luke123', 0, 0),
+(9, 'Abel', 'Liland', 'Vision', 3, 3, 'reg-no-009', 'abel', 'abel123', 0, 1),
+(10, 'Abby', 'Lenny', 'Raquell', 3, 1, 'reg-no-010', 'lenny', 'lenny123', 0, 0),
+(11, 'Alice', 'Kibanja', 'Maragua', 3, 2, 'reg-no-011', 'alice', 'alice123', 0, 0),
+(12, 'Sumaya', 'Atiamuga', 'Ngana', 3, 2, 'reg-no-012', 'sumaya', 'sumaya123', 0, 0),
+(30, 'malenga', 'tom', NULL, 2, NULL, '34', 'malenga', 'malenga-tom123', 0, 1),
+(31, 'thagana', 'mistom', NULL, 2, NULL, '35', 'thagana', 'thagana-mistom123', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -336,7 +336,7 @@ CREATE TABLE `user_profiles` (
 INSERT INTO `user_profiles` (`user_profile_id`, `date_of_birth`, `user_id`, `programme_id`, `gender`, `phone_number`, `address`, `next_of_kin_name`, `next_of_kin_contact`, `user_email`) VALUES
 (1, '2001-01-01', 1, NULL, 'male', 798765432, '123Rongai', 'Kimani', '0774185296', ''),
 (2, '2021-02-17', 2, NULL, 'male', 798711432, '234Nairoi', 'Kariuki', '0774225296', ''),
-(3, '1999-03-20', 3, 1, 'female', 798001432, '234Kiserian', 'Karemi', '0704221196', 'keenh@gmail.com'),
+(3, '1999-03-20', 3, 1, 'female', 798001432, '234Kiserian', 'Karemi', '0704221196', 'kigardetom2001@gmail.com'),
 (4, '1999-03-05', 4, 2, 'Female', 789858578, '456Kisumu', 'Michael', '0789685685', 'nurasel@gmail.com'),
 (5, '0000-00-00', 5, 7, 'male', 715456568, '111Nairobi', 'Muringi', '07854633258', 'patrick@gmailcom'),
 (6, '2000-10-15', 6, 15, 'Female', 789546132, '456Mandera', 'Paul', '0745858468', 'lindas@gmail.com'),
@@ -346,9 +346,8 @@ INSERT INTO `user_profiles` (`user_profile_id`, `date_of_birth`, `user_id`, `pro
 (10, '1997-01-10', 10, 21, 'Female', 784323422, '555Maragua', 'Chepkemboi', '0711255568', 'lennyabby@gmail.com'),
 (11, '1997-11-10', 11, 19, 'Female', 783323422, '900Mandera', 'Kahuru', '0719000568', 'kibanjaalice@gmail.com'),
 (12, '2001-11-19', 12, 18, 'Female', 778900001, '876Jamuhuri', 'Mohammed', '0719322568', 'atiamugasumsum@gmail.com'),
-(19, NULL, 21, NULL, NULL, 147845858, NULL, NULL, NULL, 'email@gmail.com'),
-(20, NULL, 22, NULL, NULL, 212, NULL, NULL, NULL, 'w.@ff'),
-(21, NULL, 23, NULL, NULL, 789858585, NULL, NULL, NULL, 'mell@gmail.com');
+(28, NULL, 30, NULL, NULL, 78999995, NULL, NULL, NULL, 'kigardetom2001@gmail.com'),
+(29, NULL, 31, NULL, NULL, 788545696, NULL, NULL, NULL, 'kigardetom2001@gmail.com');
 
 --
 -- Indexes for dumped tables
@@ -430,7 +429,7 @@ ALTER TABLE `academic_year`
 -- AUTO_INCREMENT for table `activities_table`
 --
 ALTER TABLE `activities_table`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `departments`
@@ -442,13 +441,13 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `institution_info`
 --
 ALTER TABLE `institution_info`
-  MODIFY `institution_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `institution_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `institution_supervisor`
 --
 ALTER TABLE `institution_supervisor`
-  MODIFY `institution_supervisor_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `institution_supervisor_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `programme`
@@ -472,13 +471,13 @@ ALTER TABLE `school`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `user_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `user_profiles`
 --
 ALTER TABLE `user_profiles`
-  MODIFY `user_profile_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `user_profile_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
