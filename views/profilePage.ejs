@@ -26,13 +26,14 @@
                                 JKUAT KAREN CAMPUS
                             </h6>
                             <p class="proile-rating">Gender : <span><%= ROWDATA.gender %></span></p>
+<!-- __________APPROAL REJECT CONTROLLERS_______________ -->
                             <% if(ROWDATA.institution_id == null){ %>
                                 <p>Not applied for attachment</p>    
                             <%}else if(ROWDATA.approved == 1){ %>
-                                <a href="#" class="btn btn-sm btn-success disabled">Approved</a>
+                                <a class="btn btn-sm btn-success disabled">Approved</a>
                             <% }else { %>
-                                <a href="/dashboard/admin/approve/<%= ROWDATA.user_id%>" class="btn btn-sm btn-success approve">Approve</a>
-                                <a href="/dashboard/admin/reject/<%= ROWDATA.user_id%>" class="btn btn-sm btn-danger disApprove">Reject</a>    
+                                <a href="#approve" data-toggle="modal" class="btn btn-sm btn-success approve">Approve</a>
+                                <a href="#reject" data-toggle="modal" class="btn btn-sm btn-danger disApprove">Reject</a>    
                             <% } %>
 
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -196,12 +197,108 @@
                                                 <p><%= ROWDATA.supv_contact %></p>
                                             </div>
                                         </div>
-                                    </div>
+                            </div>
                         </div>
                     </div>
                 </div>
         </form>           
     </div> 
-        <%- include('./partials/_foot') %>
+
+<!-- ~~~~~~APPROVE MODAL~~~~~~~ -->
+    <div class="modal fade" id="approve" tabindex="-1" role="dialog" aria-labelledby="approveLabel" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+
+                        Are you sure you want to approve
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+    
+            <div class="modal-footer text-center">
+            <a href="/dashboard/admin/approve/<%= ROWDATA.user_id%>" class="btn btn-sm btn-info" data-dismiss="modal" >Yes</a>
+            <a class="btn btn-sm btn-info" data-dismiss="modal">No</a> 
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+<!-- ~~~~~~REJECT MODAL~~~~~~ -->
+    <div class="modal fade" id="reject" tabindex="-1" role="dialog" aria-labelledby="rejectLabel" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+
+                        Are you sure you want to reject <%= ROWDATA.first_name %>'s institution application?
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div id="modal-body">
+            </div>
+    
+            <div class="modal-footer text-center">
+            <a onclick="rejectMessage()" class="btn btn-sm btn-danger disApprove">Yes</a>
+            <a class="btn btn-sm btn-info" data-dismiss="modal">No</a> 
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    
+    <footer>
+    <%- include('./partials/_foot') %>
+    <script type="text/javascript">
+    function rejectMessage() {
+            
+        
+            const modalBody = document.getElementById('modal-body');
+            const rejectBtn = document.getElementById('rejectBtn');
+    
+            modalBody.classList.add('modal-body' ,'text-center');
+            modalBody.innerHTML = `
+            <form action="/dashboard/admin/reject/<%= ROWDATA.user_id%>" method="POST">
+            <div class="md-form">
+            <i class="fa fa-mail prefix"></i>
+            <input type="text" class="form-control" name="rejectMessage" id="rejectMessage" required>
+            <label for="rejectMessage" class="text-center">Reason</label>
+            <input type="submit" class="btn btn-sm green" value="Send"/>
+            </div>
+            </form>`;
+            rejectBtn.nextElementSibling.innerHTML = `close`;
+            rejectBtn.parentNode.removeChild(rejectBtn);
+
+        }
+    $(document).ready( () => {
+        $("form").submit(function(e){
+            e.preventDefault();
+            
+            const url = 'http://127.0.0.1:3000/dashboard/admin/reject/<%= ROWDATA.user_id%>'
+            const rejectMessage = document.getElementById('rejectMessage').value;
+
+            $.ajax({
+                url: url,
+                crossDomain: true,
+                dataType: 'json',
+                data: { rejectMessage },
+                headers: {'Access-Control-Allow-Origin': '*'},
+                success: (res, data) =>{
+
+                },
+                error: xhr => console.log(xhr)
+            })
+        })
+    
+    })
+        
+    
+    </script>
+</footer>
+
     </body>
 </html>

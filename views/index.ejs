@@ -30,7 +30,8 @@
         
         <div class="form-group">
           <label for="pwd" class="text-light">Password:</label>
-          <input type="password" name="password" id="pwd" class="form-control" placeholder="Password..." required>
+          <input type="password" name="password" id="pwd" class="form-control" placeholder="Reg Number/ Admin number..." required>
+          <a href="#" onclick="togglePasswordVisibility()" class="text-light"><small id="passSub">Show Password: </small><i class="fa fa-eye" aria-hidden="true"></i></a>
           <div class="valid-feedback">OK</div>          
           <div class="invalid-feedback">Please Insert Password</div>
 
@@ -42,6 +43,17 @@
     </div>
 
     <script>
+
+      function togglePasswordVisibility() {
+        let passField = document.getElementById("pwd");
+        let passSub = document.getElementById("passSub");
+
+        if(passField.type === "password"){ 
+          passField.type = "text"; passSub.innerHTML = "Hide password: ";
+        }else { passField.type = "password"; passSub.innerHTML = "Show password: "; }
+        return 
+      }
+
       // Disable form submissions if there are invalid fields
       (function() {
         'use strict';

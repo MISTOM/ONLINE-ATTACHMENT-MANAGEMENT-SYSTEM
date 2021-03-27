@@ -46,15 +46,16 @@ passport.use(
     },
     (username, password, done) => {
       // callback with username and password from the form
-
-      conn.query("SELECT * FROM users WHERE username =?", username,
+      let _name = `"${username}"`
+      conn.query(`SELECT * FROM users INNER JOIN user_profiles up ON users.user_id = up.user_id WHERE up.user_email =${_name}`,
         (err, rows) => {
+          console.log(rows);
           if (err) return done(err);
           if (!rows.length) {
             return done(null, false, { message: "Incorrect Username or Password! Please try again." });
           }
           ///////////////USER FOUND WRONG PASSWORD///////////////////
-          if (!(rows[0].password == password)) {
+          if (!(rows[0].registration_number == password)) {
             return done(null, false, { message: "Incorrect password! Please try again." });
           } else {
             return done(null, rows[0]);

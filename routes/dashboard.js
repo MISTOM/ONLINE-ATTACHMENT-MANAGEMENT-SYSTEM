@@ -3,8 +3,9 @@ const router = express.Router();
 const conn = require("../lib/db.js");
 const path = require("path");
 const fs = require("fs");
-// const flash = require('express-flash');
 
+
+const logger = require('../logger/config.js');
 const funs = require("../controllers/dControll");
 
 const { control } = require("../controllers/routeControll");
@@ -13,6 +14,7 @@ const { check, validationResult, matchedData, Result } = require("express-valida
 //==============================MULTER CONFIGURATION=========================
 
 const multer = require('multer');
+const { error } = require("winston");
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     let dir = 'public/uploads/';
@@ -52,7 +54,7 @@ router.get("/admin/profileView/(:id)", funs.profilePageView);
 router.get("/landing", (req, res, next) => { res.render('landing') })
 
 router.get("/admin/approve/(:id)", funs.approveCtrl);
-router.get("/admin/reject/(:id)", funs.rejectCtrl);
+router.post("/admin/reject/(:id)", funs.rejectCtrl);
 
 router.post("/attachfrm", upload.single("attachFile"), funs.attachForm);
 router.post("/e-logbook", funs.logbook);
@@ -75,8 +77,8 @@ router.get("/logout", (req, res, next) => {
     conn.query(`UPDATE users SET _2faCode = -1 WHERE user_id =${id}`, (err, result) => {
       if (err) { console.log("error whole logging out", result); throw err; }
       else {
+        logger.info("2fa active user logged out!", { user: req.user.user_id })
         req.session.destroy(() => {
-          console.log("2fa active user logging out!")
           req.logOut();
           res.redirect('/');
         });
@@ -84,8 +86,8 @@ router.get("/logout", (req, res, next) => {
     });
 
   } else {
+    logger.info("2fa disbled user logged out!", { user: req.user.user_id })
     req.session.destroy(() => {
-      console.log("2fa disbbled user logging out!")
       req.logOut();
       res.redirect('/');
     });

@@ -3,6 +3,7 @@ const fs = require("fs")
   , conn = require("../lib/db.js")
   , { genPDF } = require("./helpers/pdfConfig");
 const { clearTimeout } = require("timers");
+const logger = require("../logger/config.js");
 
 /________TODAY____________-/
 let sdate = new Date();
@@ -31,7 +32,10 @@ function send2FACode(user) {
 
   conn.query(`UPDATE users SET _2faCode = ${code} WHERE user_id = ${user.user_id}`,
     (err, result) => {
-      if (err) throw err;
+      if (err) {
+        logger.error(`Error on inserting 2fa code`, { user: user.user_id, dbErr: err })
+        throw err;
+      }
       console.log("code inserted into db", result);
     })
 
@@ -40,7 +44,13 @@ function send2FACode(user) {
   <h3>Your one time code is <pre>${code}</pre> Valid for one minute</h3>
   <p>If you did not enable 2FA, please ignore this email and <a href="#">Secure your account</a></p>
   <small>Thank You; Regards OAMS Management.</small>`;
-  sendEmail(user.user_email, emailbody, `Get Your Code`, `Mail Text`);
+
+  let emailText = `Hello ${user.first_name}
+  Secure your Account with 2-Factor Authentication.
+  Your one time code is ${code} Valid for one minute
+  If you did not enable 2FA, please ignore this email and Secure your account
+  Thank You; Regards OAMS Management.`;
+  sendEmail(user.user_email, emailbody, `Get Your Code`, emailText);
 
   clearCodeTimeout(user);
 }
@@ -49,12 +59,16 @@ function send2FACode(user) {
 let dbTimeout;
 function clearCodeTimeout(user) {
 
-  dbTimeout = setTimeout(clearFromDb, 60000, user);
+  dbTimeout = setTimeout(clearFromDb, 120000, user);
 
   function clearFromDb(user) {
     conn.query(`UPDATE users SET _2faCode = -1 WHERE user_id = ${user.user_id}`,
       (err, result) => {
-        if (err) { console.log("ERR on clearing code from db", result); throw err } else { console.log("2fa code cleared from db after 20 seconds") };
+        if (err) {
+          console.log("ERR on clearing code from db", result);
+          logger.error(`Error on clearing 2fa code`, { user: user.user_id, dbErr: err })
+          throw err
+        } else { console.log("2fa code cleared from db after 2 minutes"); logger.info("2fa code cleared", { user: user.user_id }) };
 
       })
   }
@@ -62,12 +76,11 @@ function clearCodeTimeout(user) {
 
 exports.validate2faCode = (req, res, next) => {
   const code = req.body.code;
-  console.log(Number.isInteger(122))
   if (code > 0) {
     console.log(code);
     conn.query(`SELECT _2faCode FROM users WHERE user_id = ${req.user.user_id}`,
       (err, rows) => {
-        if (err) throw err; console.log(rows[0]._2faCode);
+        if (err) throw err;
         if (rows[0]._2faCode == code) {
           clearTimeout(dbTimeout)
           conn.query(`UPDATE users SET _2faCode = 0 WHERE user_id = ${req.user.user_id}`,
@@ -85,12 +98,17 @@ exports.validate2faCode = (req, res, next) => {
 
 }
 
+//______-IF USER HAS ACTIVATED 2FA AND HAS LOGGED OUT WILL BE PROMPTED-______
 exports._2faValidation = (req, res, next) => {
   if (req.user == undefined) return res.redirect('/');
   if (req.user.is2faEnabled && req.user._2faCode == -1 || req.user._2faCode !== 0) {
-    send2FACode(req.user); res.render("2FAuthenticate", { user: req.user })
+    send2FACode(req.user); res.render("2FAuthenticate", { user: req.user.user_id });
+    logger.info("2fa enabled user login", { user: req.user.user_id })
   }
-  else return next();
+  else {
+    logger.info("2fa disabled user login", { user: req.user.user_id })
+    next();
+  }
 }
 
 exports.activate2FA = (req, res, next) => {
@@ -98,8 +116,10 @@ exports.activate2FA = (req, res, next) => {
   conn.query(`UPDATE users SET is2faEnabled = 1 WHERE user_id = ${id}`,
     (err, result) => {
       if (err) {
+        logger.error("Error activating 2fa", { user: req.user.user_id, dbError: err })
         res.json("failed"); throw err;
       }
+      logger.info("2fa activated", { user: req.user.user_id })
       res.json("activated");
       // console.log(result);
     });
@@ -110,8 +130,10 @@ exports.deactivate2FA = (req, res, next) => {
   conn.query(`UPDATE users SET is2faEnabled = 0 WHERE user_id = ${id}`,
     (err, result) => {
       if (err) {
+        logger.error("Error deactivating 2fa", { user: req.user.user_id, dbError: err })
         res.json("failed"); throw err;
       }
+      logger.info("2fa deactivated", { user: req.user.user_id })
       res.json("disabled");
     });
 }
@@ -141,7 +163,8 @@ exports.dForm = (req, res, next) => {
   } else {
     console.log("rendering dform...");
     res.render("dForm", {
-      user: req.user
+      user: req.user,
+      minDate: today
     });
   };
 }
@@ -240,7 +263,11 @@ exports.logbook = (req, res, next) => {
   let v = [`${id}`, `${dayslog}`, `${today}`]
 
   conn.query(q, v, (err, result) => {
-    if (err) throw err;
+    if (err) {
+      logger.error("Error student logging", { user: req.user.user_id, studentLog: dayslog, dbError: err });
+      throw err;
+    }
+    logger.info("student logged", { user: req.user.user_id, studentLog: dayslog })
     console.log(result);
     // sendEmail("kigardetom2001@gmail.com", `<h1>hello there</h1> <h3>${dayslog}</h3>`, "oams", "this is the body")
     //   .catch(e => { console.log(e) });
@@ -268,7 +295,7 @@ exports.attachForm = (req, res, next) => {
   //______________RUNNING QUERY 1________________//
   conn.query(q1, v1, (err, result) => {
     if (err) {
-      res.render('error', { message: 'SOMETHING IS WENT WRONG', error: err })
+      logger.error("Error inserting institution", { user: req.user.user_id, dbError: err })
       console.log('===========Failed, there was an error on first query==============');
       throw err;
     } else {
@@ -277,6 +304,7 @@ exports.attachForm = (req, res, next) => {
       //______________RUNNING QUERY 2________________//
       conn.query(q2, v2, (err, result) => {
         if (err) {
+          logger.error("Error inserting supervisor", { user: req.user.user_id, dbError: err })
           console.log('===========Failed, there was an error on second query========deliting previous query==');
           //_____________DELETE FROM PREVIOUS QUERY IF ANYTHING GOES WRONG__________//
           conn.query(`DELETE FROM institution_info WHERE institution_id =(SELECT MAX(institution_id) from institution_info)`)
@@ -295,37 +323,45 @@ exports.approveCtrl = (req, res, next) => {
   let Aid = req.params.id;
   conn.query(`UPDATE institution_info SET approved = 1 WHERE student_id = ${Aid}`,
     (err, result) => {
-      if (err) throw err;
+      if (err) {
+        logger.error("Error updating student approval", { user: req.user.user_id, dbError: err })
+        throw err;
+      }
       // console.log(result.message);
       conn.query(`SELECT * FROM institution_supervisor isup INNER JOIN institution_info insf ON insf.institution_id = isup.institution_id AND insf.student_id = ${Aid}`,
         (err, rows) => {
           if (err) throw err;
 
           //__________________________STUDENTS' SUPERVISORS DETAILS________________/
-          let sid = rows[0].institution_supervisor_id;
+          let sid = `sup-no-${rows[0].institution_supervisor_id}`;
           let sfst = rows[0].supv_first_name;
           let slst = rows[0].supv_last_name;
           let seml = rows[0].supv_email;
           let scont = rows[0].supv_contact;
           let role = 2;
-          let pass = sfst + "-" + slst + "123".toLowerCase();
-          let truepass = pass.replace(/\s/g, "");
 
           let institution = rows[0].institution_name
           //________________________________________________________________________/
 
-          let q = `INSERT INTO users (first_name, last_name, role_id, registration_number, username, password) VALUES (?, ?, ?, ?, ?, ?)`;
-          let v = [`${sfst}`, `${slst}`, `${role}`, `${sid}`, `${sfst}`, `${truepass}`];
+          let q = `INSERT INTO users (first_name, last_name, role_id, registration_number, username) VALUES (?, ?, ?, ?, ?)`;
+          let v = [`${sfst}`, `${slst}`, `${role}`, `${sid}`, `${sfst}`];
 
           conn.query(q, v, (err, results) => {
-            if (err) throw err;
+            if (err) {
+              logger.error("Error creating supervisor to be a user", { user: req.user.user_id, dbError: err })
+              throw err;
+            }
             console.log('inserted into users!!!!!!!!!!');
 
             let q2 = `INSERT INTO user_profiles (user_email, phone_number, user_id) VALUES (?, ?, (SELECT MAX(user_id) FROM users))`;
             let v2 = [`${seml}`, `${scont}`];
 
             conn.query(q2, v2, (err, results) => {
-              if (err) throw err;
+              if (err) {
+                logger.error("Error creating supervisor user-profiles", { user: req.user.user_id, dbError: err })
+                throw err;
+              }
+              logger.info("Supervisor created || student approved", { supervisor: v, approvedStudent: Aid })
               console.log('inserted into user profiles________all queriws success');
 
               conn.query(`SELECT * FROM users WHERE user_id = ${Aid}`,
@@ -334,14 +370,18 @@ exports.approveCtrl = (req, res, next) => {
                   /----------------------------------SEND EMAIL TO SUPERVISOR----------------------------/
                   let output = `<h1> Hello ${sfst} from ${institution}!</h1><br>
                               <h3>The username for your OAMS Account is ${sfst}.</h3><hr>
-                              <h3>The password is ${truepass}.</h3>
+                              <h3>The password is ${sid}.</h3>
                               <p>If you are not the supervisor the student <i>${rows[0].first_name}</i> at ${institution}, please ignore the email</p>
                               <small>Thank You; Regards OAMS Management.</small>`;
-                  let mailtext = `mail text`;
+                  let mailtext = `Hello ${sfst} from ${institution}!
+                  The username for your OAMS Account is ${sfst}.
+                  The password is ${sid}.
+                  If you are not the supervisor the student ${rows[0].first_name} at ${institution}, please ignore the email
+                  Thank You; Regards OAMS Management.`;
                   let mailSubject = "Credentials of the Online Attachment System"
 
                   sendEmail(`${seml}`, output, mailSubject, mailtext)
-                    .catch(e => console.log(e));
+                    .catch(e => logger.error("Error sending email credentals ot supervisor", { supervisor: v, emailError: e }));
 
                   res.redirect(`/dashboard/admin/profileView/${Aid}`);
 
@@ -357,17 +397,16 @@ exports.approveCtrl = (req, res, next) => {
 
 exports.rejectCtrl = (req, res, next) => {
   let Aid = req.params.id;
-  conn.query(`DELETE institution_info, institution_supervisor FROM institution_info INNER JOIN institution_supervisor ON institution_info.institution_id = institution_supervisor.institution_id WHERE institution_info.student_id = ${Aid}`, (err, result) => {
-    if (err) throw err;
-    console.log('The delete from two tables_____________' + result);
-    res.redirect(`/dashboard/admin/profileview/${Aid}`)
-  });
+  let { rejectMessage } = req.body;
+  (rejectMessage == 'hello') ? res.json("hello message") : res.json("not hello message");
 }
 
 //=================================================INSTITUTION_SUPERVISOR===========================
 
 exports.supervisor = (req, res, next) => {
-  const supNo = req.user.registration_number;
+  let supregNo = req.user.registration_number;
+  const supNo = supregNo.split("-").pop();
+
   let q = `SELECT * FROM activities_table WHERE user_id IN (SELECT student_id FROM institution_info insf, institution_supervisor insv WHERE insf.institution_id = insv.institution_id AND insv.institution_supervisor_id = ${supNo})`;
   conn.query(q, (err, rows) => {
     if (err) throw err
@@ -393,6 +432,7 @@ exports.supComment = (req, res, next) => {
 
   conn.query(q, (err, result) => {
     if (err) throw err;
+    logger.info(`supervisor comment on student ${userid}`, { user: req.user.user_id, comment: supervisorLog })
     console.log(result);
     req.flash("message", "Comment added successfully.")
     res.redirect('/dashboard/supervisor');

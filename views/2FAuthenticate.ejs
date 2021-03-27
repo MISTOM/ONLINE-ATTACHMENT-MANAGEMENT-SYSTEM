@@ -20,9 +20,6 @@
               <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Please input the code we've sent to <%= user.user_email%></h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="close">
-                      <span aria-hidden="true">&times;</span>
-                  </button>
 
                 </div>
                 <form action="/dashboard/validate2faCode" method="POST">
@@ -34,7 +31,7 @@
                     </div>
                     <div class="modal-footer">
                         <p class="text-mutted" id="message">Did not receive code? Click <a href="/dashboard">here</a> to resend</p>
-                        <input type="submit" id="send" class="btn btn-sm btn-outline-green" value="Send">
+                        <input type="submit"  id="send" class="btn btn-sm btn-outline-green" value="Send">
                     </div>
                 </div>
                 </form>
@@ -54,7 +51,7 @@ $(document).ready(function(){
     $('#_2fauthenticate').modal('show');
     
     $("form").submit(function (e) {
-    let url =/*`http://127.0.0.1:3000/dashboard/validate2faCode`;*/ `http://96.126.122.21/dashboard/validate2faCode`;
+    let url =`http://127.0.0.1:3000/dashboard/validate2faCode`; /*`http://96.126.122.21/dashboard/validate2faCode`;*/
     let user_code = document.getElementById('_2facode').value;
     let submit = document.getElementById("send");
     e.preventDefault();
@@ -65,7 +62,7 @@ $(document).ready(function(){
         crossDomain: true,
         dataType: 'json',
         data:{code:user_code},
-        Headers: {'Access-Control_Allow-Origin': '*'},
+        Headers: {'Access-Control-Allow-Origin': '*'},
         success: function(res, data){
             console.log(res)
             function Loading(){
@@ -81,12 +78,12 @@ $(document).ready(function(){
             }
 
             function redirect() {
-            location.href = "http://96.126.122.21/dashboard";//"http://127.0.0.1:3000/dashboard"
+            location.href = /*"http://96.126.122.21/dashboard";*/"http://127.0.0.1:3000/dashboard";
             }
 
             if(res == "2FAValid"){
                 Loading();
-                setTimeout(redirect, 1500);
+                setTimeout(redirect, 1000);
             }else{
                 Loading();
                 setTimeout(restore, 1500,);

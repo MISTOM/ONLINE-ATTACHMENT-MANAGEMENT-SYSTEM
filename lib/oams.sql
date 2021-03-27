@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 24, 2021 at 05:44 AM
+-- Generation Time: Mar 24, 2021 at 01:25 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.3.21
 
@@ -162,8 +162,8 @@ CREATE TABLE `institution_supervisor` (
 --
 
 INSERT INTO `institution_supervisor` (`institution_supervisor_id`, `supv_first_name`, `supv_last_name`, `supv_email`, `supv_contact`, `institution_id`) VALUES
-(34, 'malenga', 'tom', 'kigardetom2001@gmail.com', 78999995, '35'),
-(35, 'thagana', 'mistom', 'kigardetom2001@gmail.com', 788545696, '36');
+(34, 'malenga', 'tom', 'kigardetom@gmail.com', 78999995, '35'),
+(35, 'thagana', 'mistom', 'kigardetom2001@yahoo.com', 788545696, '36');
 
 -- --------------------------------------------------------
 
@@ -285,7 +285,6 @@ CREATE TABLE `users` (
   `academic_year_id` int(255) DEFAULT NULL,
   `registration_number` varchar(255) DEFAULT NULL,
   `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
   `_2faCode` int(255) NOT NULL DEFAULT 0,
   `is2faEnabled` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -294,21 +293,21 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `other_name`, `role_id`, `academic_year_id`, `registration_number`, `username`, `password`, `_2faCode`, `is2faEnabled`) VALUES
-(1, 'Cardinal', 'Tom B', 'Erichsen', 1, NULL, NULL, 'cardinal', 'cardinal123', 0, 0),
-(2, 'Jamen', 'Erick', 'Taurine', 1, NULL, NULL, 'erick', 'erick123', 0, 1),
-(3, 'Hillary', 'Keen', 'Cite', 3, 3, 'reg-no-003', 'keen', 'keen123', -1, 1),
-(4, 'Selina', 'Nursa', 'Mirara', 3, 4, 'reg-no-004', 'nursa', 'nursa123', 0, 0),
-(5, 'Patrick', 'Munene', 'Odinga', 3, 1, 'reg-no-005', 'odinga', 'odinga123', 0, 0),
-(6, 'Sylvia', 'Linda', 'Kiragu', 3, 2, 'reg-no-006', 'kiragu', 'kiragu123', 0, 0),
-(7, 'Salah', 'Loice', 'Kihara', 3, 1, 'reg-no-007', 'loice', 'loice123', 0, 0),
-(8, 'Shaq', 'Luke', 'Kiambere', 3, 2, 'reg-no-008', 'luke', 'luke123', 0, 0),
-(9, 'Abel', 'Liland', 'Vision', 3, 3, 'reg-no-009', 'abel', 'abel123', 0, 1),
-(10, 'Abby', 'Lenny', 'Raquell', 3, 1, 'reg-no-010', 'lenny', 'lenny123', 0, 0),
-(11, 'Alice', 'Kibanja', 'Maragua', 3, 2, 'reg-no-011', 'alice', 'alice123', 0, 0),
-(12, 'Sumaya', 'Atiamuga', 'Ngana', 3, 2, 'reg-no-012', 'sumaya', 'sumaya123', 0, 0),
-(30, 'malenga', 'tom', NULL, 2, NULL, '34', 'malenga', 'malenga-tom123', 0, 1),
-(31, 'thagana', 'mistom', NULL, 2, NULL, '35', 'thagana', 'thagana-mistom123', 0, 0);
+INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `other_name`, `role_id`, `academic_year_id`, `registration_number`, `username`, `_2faCode`, `is2faEnabled`) VALUES
+(1, 'Cardinal', 'Tom B', 'Erichsen', 1, NULL, 'adm-no-001', 'cardinal', 0, 0),
+(2, 'Jamen', 'Erick', 'Taurine', 1, NULL, 'adm-no-002', 'erick', 0, 0),
+(3, 'Hillary', 'Keen', 'Cite', 3, 3, 'reg-no-003', 'keen', 0, 1),
+(4, 'Selina', 'Nursa', 'Mirara', 3, 4, 'reg-no-004', 'nursa', 0, 0),
+(5, 'Patrick', 'Munene', 'Odinga', 3, 1, 'reg-no-005', 'odinga', 0, 0),
+(6, 'Sylvia', 'Linda', 'Kiragu', 3, 2, 'reg-no-006', 'kiragu', 0, 0),
+(7, 'Salah', 'Loice', 'Kihara', 3, 1, 'reg-no-007', 'loice', 0, 0),
+(8, 'Shaq', 'Luke', 'Kiambere', 3, 2, 'reg-no-008', 'luke', 0, 0),
+(9, 'Abel', 'Liland', 'Vision', 3, 3, 'reg-no-009', 'abel', 0, 0),
+(10, 'Abby', 'Lenny', 'Raquell', 3, 1, 'reg-no-010', 'lenny', 0, 0),
+(11, 'Alice', 'Kibanja', 'Maragua', 3, 2, 'reg-no-011', 'alice', 0, 0),
+(12, 'Sumaya', 'Atiamuga', 'Ngana', 3, 2, 'reg-no-012', 'sumaya', 0, 0),
+(30, 'malenga', 'tom', NULL, 2, NULL, 'sup-no-034', 'malenga', 0, 1),
+(31, 'thagana', 'mistom', NULL, 2, NULL, 'sup-no-035', 'thagana', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -334,8 +333,8 @@ CREATE TABLE `user_profiles` (
 --
 
 INSERT INTO `user_profiles` (`user_profile_id`, `date_of_birth`, `user_id`, `programme_id`, `gender`, `phone_number`, `address`, `next_of_kin_name`, `next_of_kin_contact`, `user_email`) VALUES
-(1, '2001-01-01', 1, NULL, 'male', 798765432, '123Rongai', 'Kimani', '0774185296', ''),
-(2, '2021-02-17', 2, NULL, 'male', 798711432, '234Nairoi', 'Kariuki', '0774225296', ''),
+(1, '2001-01-01', 1, NULL, 'male', 798765432, '123Rongai', 'Kimani', '0774185296', 'cardinalmj@gmail.com'),
+(2, '2021-02-17', 2, NULL, 'male', 798711432, '234Nairoi', 'Kariuki', '0774225296', 'erick80@gmail.com'),
 (3, '1999-03-20', 3, 1, 'female', 798001432, '234Kiserian', 'Karemi', '0704221196', 'kigardetom2001@gmail.com'),
 (4, '1999-03-05', 4, 2, 'Female', 789858578, '456Kisumu', 'Michael', '0789685685', 'nurasel@gmail.com'),
 (5, '0000-00-00', 5, 7, 'male', 715456568, '111Nairobi', 'Muringi', '07854633258', 'patrick@gmailcom'),
@@ -346,8 +345,8 @@ INSERT INTO `user_profiles` (`user_profile_id`, `date_of_birth`, `user_id`, `pro
 (10, '1997-01-10', 10, 21, 'Female', 784323422, '555Maragua', 'Chepkemboi', '0711255568', 'lennyabby@gmail.com'),
 (11, '1997-11-10', 11, 19, 'Female', 783323422, '900Mandera', 'Kahuru', '0719000568', 'kibanjaalice@gmail.com'),
 (12, '2001-11-19', 12, 18, 'Female', 778900001, '876Jamuhuri', 'Mohammed', '0719322568', 'atiamugasumsum@gmail.com'),
-(28, NULL, 30, NULL, NULL, 78999995, NULL, NULL, NULL, 'kigardetom2001@gmail.com'),
-(29, NULL, 31, NULL, NULL, 788545696, NULL, NULL, NULL, 'kigardetom2001@gmail.com');
+(28, NULL, 30, NULL, NULL, 78999995, NULL, NULL, NULL, 'kigardetom@gmail.com'),
+(29, NULL, 31, NULL, NULL, 788545696, NULL, NULL, NULL, 'kigardetom2001@yahoo.com');
 
 --
 -- Indexes for dumped tables
