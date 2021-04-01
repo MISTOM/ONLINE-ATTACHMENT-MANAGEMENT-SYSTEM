@@ -7,9 +7,8 @@ const createError = require("http-errors")
   , flash = require("express-flash")
   , session = require("express-session")
   , expressMessages = require("express-messages")
-  , dotenv = require("dotenv");
-dotenv.config();
-const passport = require("passport");
+  , passport = require("passport");
+require("dotenv").config();
 
 //EXPRESS INIT
 const app = express();
@@ -52,6 +51,14 @@ const { strict } = require("assert");
 
 app.use("/", indexRouter);
 app.use("/dashboard", dashboard);
+
+//_____GET IP ADDRESS FROM REQUEST______//
+const { getClientIp } = require("@supercharge/request-ip");
+const getIp = (req, res, next) => {
+  req.ip = getClientIp(req);
+  next();
+}
+app.use(getIp);
 
 
 /**API ROUTE =============================================*/

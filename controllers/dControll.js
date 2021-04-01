@@ -39,18 +39,18 @@ function send2FACode(user) {
       console.log("code inserted into db", result);
     })
 
-  let emailbody = `<h1> Hello ${user.first_name}</h1><br>
-  <h3>Secure your Account with 2-Factor Authentication.</h3><hr>
+  let emailbody = `<h1>Dear ${user.first_name}</h1><br>
+  <h3>The 2 Factor Authentication for your OAMS Account has been successfully set.</h3><hr>
   <h3>Your one time code is <pre>${code}</pre> Valid for one minute</h3>
   <p>If you did not enable 2FA, please ignore this email and <a href="#">Secure your account</a></p>
   <small>Thank You; Regards OAMS Management.</small>`;
 
-  let emailText = `Hello ${user.first_name}
-  Secure your Account with 2-Factor Authentication.
-  Your one time code is ${code} Valid for one minute
-  If you did not enable 2FA, please ignore this email and Secure your account
-  Thank You; Regards OAMS Management.`;
-  sendEmail(user.user_email, emailbody, `Get Your Code`, emailText);
+  let emailText = `<h1>Dear ${user.first_name}</h1><br>
+  <h3>The 2 Factor Authentication for your OAMS Account has been successfully set.</h3><hr>
+  <h3>Your one time code is <pre>${code}</pre> Valid for one minute</h3>
+  <p>If you did not enable 2FA, please ignore this email and <a href="#">Secure your account</a></p>
+  <small>Thank You; Regards OAMS Management.</small>`;
+  // sendEmail(user.user_email, emailbody, 'Your 2FA Code', emailText);
 
   clearCodeTimeout(user);
 }
@@ -140,6 +140,7 @@ exports.deactivate2FA = (req, res, next) => {
 //============================================================================================
 
 exports.dView = async (req, res, next) => {
+  console.log(req.ip);
   if (req.user.role_id === 1) {
     res.redirect('/dashboard/admin')
   } else if (req.user.role_id === 2) {
@@ -147,6 +148,7 @@ exports.dView = async (req, res, next) => {
   } else {
     console.log("rendering std dashboard...");
     let link = await genPDF(req, res, next);
+    logger.info("route for student dashboard hit")
     res.render("dashboard", {
       user: req.user,
       link: link
@@ -231,7 +233,7 @@ exports.Elogbook = (req, res, next) => {
       conn.query(`SELECT * FROM activities_table WHERE user_id = ${req.user.user_id} AND log_date = "${today}"`,
         (err, rows1) => {
           if (err) throw err;
-          conn.query(`SELECT * FROM activities_table WHERE user_id = ${req.user.user_id}`, (err, rows2) => {
+          conn.query(`SELECT * FROM activities_table WHERE user_id = ${req.user.user_id} ORDER BY log_id DESC`, (err, rows2) => {
             if (err) throw err;
 
             //____FORMATING THE FORMATTED DATE____//
@@ -368,16 +370,18 @@ exports.approveCtrl = (req, res, next) => {
                 (err, rows) => {
                   if (err) throw err;
                   /----------------------------------SEND EMAIL TO SUPERVISOR----------------------------/
-                  let output = `<h1> Hello ${sfst} from ${institution}!</h1><br>
-                              <h3>The username for your OAMS Account is ${sfst}.</h3><hr>
+                  let output = `<h1>Dear ${sfst} - ${institution}</h1><br>
+                              <h3>The username for your OAMS Account is ${seml}.</h3><hr>
                               <h3>The password is ${sid}.</h3>
-                              <p>If you are not the supervisor the student <i>${rows[0].first_name}</i> at ${institution}, please ignore the email</p>
+                              <p>Follow this link to login as ${rows[0].first_name} ${rows[0].last_name} ${rows[0].other_name}'s Supervisor =>: <a href="http://96.126.122.21">Online Attachment Management System</a></p>
+                              <p>If you are not the supervisor at ${institution}, please ignore the email</p>
                               <small>Thank You; Regards OAMS Management.</small>`;
-                  let mailtext = `Hello ${sfst} from ${institution}!
-                  The username for your OAMS Account is ${sfst}.
-                  The password is ${sid}.
-                  If you are not the supervisor the student ${rows[0].first_name} at ${institution}, please ignore the email
-                  Thank You; Regards OAMS Management.`;
+                  let mailtext = `<h1>Dear ${sfst} - ${institution}</h1><br>
+                  <h3>The username for your OAMS Account is ${seml}.</h3><hr>
+                  <h3>The password is ${sid}.</h3>
+                  <p>Follow this link to login as ${rows[0].first_name} ${rows[0].last_name} ${rows[0].other_name}'s Supervisor =>: <a href="http://96.126.122.21">Online Attachment Management System</a></p>
+                  <p>If you are not the supervisor at ${institution}, please ignore the email</p>
+                  <small>Thank You; Regards OAMS Management.</small>`;
                   let mailSubject = "Credentials of the Online Attachment System"
 
                   sendEmail(`${seml}`, output, mailSubject, mailtext)
@@ -396,9 +400,20 @@ exports.approveCtrl = (req, res, next) => {
 }
 
 exports.rejectCtrl = (req, res, next) => {
-  let Aid = req.params.id;
-  let { rejectMessage } = req.body;
-  (rejectMessage == 'hello') ? res.json("hello message") : res.json("not hello message");
+  let { id: stdId } = req.params;
+  let rejectMessage = req.body.rejectMessage;
+  console.log(req.body)
+
+  conn.query(`UPDATE institution_info SET rejected = 1 WHERE student_id = ${stdId}; UPDATE institution_info SET reject_message = "${rejectMessage}" WHERE student_id = ${stdId}`,
+    (err, result) => {
+      if (err) {
+        logger.error("error rejecting std submission", { student: stdId, dbError: err });
+        throw err;
+      } else {
+        logger.info(`student ${stdId} submission rejected`, { rejectedBy: req.user.user_id, rejectMessage: rejectMessage });
+        res.json("REJECT_SUCCESS")
+      }
+    })
 }
 
 //=================================================INSTITUTION_SUPERVISOR===========================
@@ -407,7 +422,7 @@ exports.supervisor = (req, res, next) => {
   let supregNo = req.user.registration_number;
   const supNo = supregNo.split("-").pop();
 
-  let q = `SELECT * FROM activities_table WHERE user_id IN (SELECT student_id FROM institution_info insf, institution_supervisor insv WHERE insf.institution_id = insv.institution_id AND insv.institution_supervisor_id = ${supNo})`;
+  let q = `SELECT * FROM activities_table WHERE user_id IN (SELECT student_id FROM institution_info insf, institution_supervisor insv WHERE insf.institution_id = insv.institution_id AND insv.institution_supervisor_id = ${supNo}) ORDER BY log_id DESC`;
   conn.query(q, (err, rows) => {
     if (err) throw err
     //_____FORMATING THE LOG DATE___

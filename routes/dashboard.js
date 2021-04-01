@@ -9,7 +9,12 @@ const logger = require('../logger/config.js');
 const funs = require("../controllers/dControll");
 
 const { control } = require("../controllers/routeControll");
-const { check, validationResult, matchedData, Result } = require("express-validator");
+
+const { getClientIp } = require("@supercharge/request-ip");
+const getIp = (req, res, next) => {
+  req.ip = getClientIp(req);
+  next();
+}
 
 //==============================MULTER CONFIGURATION=========================
 
@@ -46,15 +51,15 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 //==============================================================================
 
 /------------------ROUTES--------------------/
-router.get("/", funs._2faValidation, funs.dView);
+router.get("/", funs._2faValidation, getIp, funs.dView);
 router.get("/dForm", funs.dForm);
 router.get("/e-logbook", funs.Elogbook);
 router.get("/admin", control, funs.dAdmin);
 router.get("/admin/profileView/(:id)", funs.profilePageView);
 router.get("/landing", (req, res, next) => { res.render('landing') })
 
-router.get("/admin/approve/(:id)", funs.approveCtrl);
-router.post("/admin/reject/(:id)", funs.rejectCtrl);
+router.get("/admin/approve/:id", funs.approveCtrl);
+router.post("/admin/reject/:id", funs.rejectCtrl);
 
 router.post("/attachfrm", upload.single("attachFile"), funs.attachForm);
 router.post("/e-logbook", funs.logbook);

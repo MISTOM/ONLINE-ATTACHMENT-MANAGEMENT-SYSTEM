@@ -31,7 +31,8 @@
         <div class="form-group">
           <label for="pwd" class="text-light">Password:</label>
           <input type="password" name="password" id="pwd" class="form-control" placeholder="Reg Number/ Admin number..." required>
-          <a href="#" onclick="togglePasswordVisibility()" class="text-light"><small id="passSub">Show Password: </small><i class="fa fa-eye" aria-hidden="true"></i></a>
+          <div onmouseover="togglePasswordVisibility()" onmouseout="togglePasswordVisibility()">
+          <a class="text-light"><small id="passSub">Show Password: </small><i class="fa fa-eye" aria-hidden="true"></i></a></div>
           <div class="valid-feedback">OK</div>          
           <div class="invalid-feedback">Please Insert Password</div>
 

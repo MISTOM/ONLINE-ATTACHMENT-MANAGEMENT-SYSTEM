@@ -20,7 +20,9 @@
               <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Please input the code we've sent to <%= user.user_email%></h5>
-
+                    <a href="/dashboard/logout" class="close" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </a>
                 </div>
                 <form action="/dashboard/validate2faCode" method="POST">
                 <div class="md-form">
@@ -31,7 +33,7 @@
                     </div>
                     <div class="modal-footer">
                         <p class="text-mutted" id="message">Did not receive code? Click <a href="/dashboard">here</a> to resend</p>
-                        <input type="submit"  id="send" class="btn btn-sm btn-outline-green" value="Send">
+                        <input type="submit" id="send" class="btn btn-sm btn-outline-green" value="Send">
                     </div>
                 </div>
                 </form>
@@ -51,7 +53,7 @@ $(document).ready(function(){
     $('#_2fauthenticate').modal('show');
     
     $("form").submit(function (e) {
-    let url =`http://127.0.0.1:3000/dashboard/validate2faCode`; /*`http://96.126.122.21/dashboard/validate2faCode`;*/
+    let url =`http://127.0.0.1:3000/dashboard/validate2faCode`;
     let user_code = document.getElementById('_2facode').value;
     let submit = document.getElementById("send");
     e.preventDefault();
@@ -78,7 +80,7 @@ $(document).ready(function(){
             }
 
             function redirect() {
-            location.href = /*"http://96.126.122.21/dashboard";*/"http://127.0.0.1:3000/dashboard";
+            location.href = "http://127.0.0.1:3000/dashboard";
             }
 
             if(res == "2FAValid"){

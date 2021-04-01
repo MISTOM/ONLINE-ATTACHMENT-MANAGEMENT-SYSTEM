@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head><%- include('./partials/_head') %></head>
+    <head><%- include('./partials/_head') %>
     <link rel="stylesheet" href="/stylesheets/profilePageSty.css">
     <title>Profile Page</title>
+</head>
 <body>
     <div class="container emp-profile">
-        <form method="post">
             <div class="row">
                 <div class="col-md-4">
                     <!-- ===============TODO========================== -->
@@ -16,7 +16,10 @@
                                 <input type="file" name="file"/>
                             </div>
                         </div> -->
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, quas.</p>
+                        <% if (ROWDATA.reject_message !== null) { %>
+                            <p><%= ROWDATA.reject_message %>te</p>
+                        <%}%>
+                        
                 </div>
                     <!-- ================================================= -->
                     <div class="col-md-6">
@@ -28,9 +31,11 @@
                             <p class="proile-rating">Gender : <span><%= ROWDATA.gender %></span></p>
 <!-- __________APPROAL REJECT CONTROLLERS_______________ -->
                             <% if(ROWDATA.institution_id == null){ %>
-                                <p>Not applied for attachment</p>    
+                                <p>Not applied for Attachment/Internship</p>    
                             <%}else if(ROWDATA.approved == 1){ %>
                                 <a class="btn btn-sm btn-success disabled">Approved</a>
+                            <% }else if(ROWDATA.rejected == 1){ %>
+                                <a class="btn btn-sm btn-warning disabled">Rejected</a>
                             <% }else { %>
                                 <a href="#approve" data-toggle="modal" class="btn btn-sm btn-success approve">Approve</a>
                                 <a href="#reject" data-toggle="modal" class="btn btn-sm btn-danger disApprove">Reject</a>    
@@ -200,8 +205,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-        </form>           
+                </div>        
     </div> 
 
 <!-- ~~~~~~APPROVE MODAL~~~~~~~ -->
@@ -219,8 +223,8 @@
             </div>
     
             <div class="modal-footer text-center">
-            <a href="/dashboard/admin/approve/<%= ROWDATA.user_id%>" class="btn btn-sm btn-info" data-dismiss="modal" >Yes</a>
-            <a class="btn btn-sm btn-info" data-dismiss="modal">No</a> 
+            <a href="/dashboard/admin/approve/<%= ROWDATA.user_id%>" class="btn btn-sm btn-outline-secondary" data-dismiss="modal" >Yes</a>
+            <a class="btn btn-sm btn-outline-secondary" data-dismiss="modal">No</a> 
             </div>
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -244,61 +248,69 @@
             </div>
     
             <div class="modal-footer text-center">
-            <a onclick="rejectMessage()" class="btn btn-sm btn-danger disApprove">Yes</a>
-            <a class="btn btn-sm btn-info" data-dismiss="modal">No</a> 
+            <a onclick="loadForm()" class="btn btn-sm btn-outline-secondary approve">Yes </a>
+            <a id="dismiss" class="btn btn-sm btn-outline-secondary disApprove" data-dismiss="modal">No </a> 
             </div>
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    
+    <div id="alertBox"></div>
     <footer>
     <%- include('./partials/_foot') %>
-    <script type="text/javascript">
-    function rejectMessage() {
+<script type="text/javascript">
+function loadForm() {
             
         
-            const modalBody = document.getElementById('modal-body');
-            const rejectBtn = document.getElementById('rejectBtn');
-    
-            modalBody.classList.add('modal-body' ,'text-center');
-            modalBody.innerHTML = `
-            <form action="/dashboard/admin/reject/<%= ROWDATA.user_id%>" method="POST">
-            <div class="md-form">
-            <i class="fa fa-mail prefix"></i>
-            <input type="text" class="form-control" name="rejectMessage" id="rejectMessage" required>
-            <label for="rejectMessage" class="text-center">Reason</label>
-            <input type="submit" class="btn btn-sm green" value="Send"/>
-            </div>
-            </form>`;
-            rejectBtn.nextElementSibling.innerHTML = `close`;
-            rejectBtn.parentNode.removeChild(rejectBtn);
+    const modalBody = document.getElementById('modal-body');
+    const modalFooter = document.querySelectorAll('.modal-footer');
+    const alertBox = document.getElementById('alertBox')
 
-        }
-    $(document).ready( () => {
-        $("form").submit(function(e){
-            e.preventDefault();
-            
-            const url = 'http://127.0.0.1:3000/dashboard/admin/reject/<%= ROWDATA.user_id%>'
-            const rejectMessage = document.getElementById('rejectMessage').value;
+    modalBody.classList.add('modal-body');
+    modalBody.innerHTML = `
+    <form method="POST" id="rejectMsgForm">
+    <div class="md-form">
+    <i class="fa fa-comment prefix"></i>
+    <input type="text" class="form-control" name="rejectMessage" id="rejectMessage" required>
+    <label for="rejectMessage" class="text-center">Reason</label>
+    <button type="button" id="msgsubmit_button" data-dismiss="modal" class="btn btn-sm btn-dark">Send</button>
+    </div>
+    </form>`;
+    modalFooter[1].parentNode.removeChild(modalFooter[1]);
 
-            $.ajax({
-                url: url,
-                crossDomain: true,
-                dataType: 'json',
-                data: { rejectMessage },
-                headers: {'Access-Control-Allow-Origin': '*'},
-                success: (res, data) =>{
+    document.getElementById("msgsubmit_button").onclick = function(){
+    console.log("clicked submitt");
+    const rejectMessage = document.getElementById("rejectMessage").value;
+    $.ajax({
+        url: 'http://127.0.0.1:3000/dashboard/admin/reject/<%= ROWDATA.user_id %>',
+        type: "POST",
+        dataType: 'json',
+        data: { rejectMessage: rejectMessage },
+        headers: {'Access-Control-Allow-Origin': '*'},
+        success: function (res, data){
+            function redirect(){
+                location.href = `/dashboard/admin/profileView/<%= ROWDATA.user_id %>`
+            }
 
-                },
-                error: xhr => console.log(xhr)
-            })
-        })
-    
+            if(res == "REJECT_SUCCESS"){
+
+            let alertMsg = `<a class="close" data-dismiss="alert" aria-label="close">&times</a><strong>Success: </strong>Rejected successfully and message sent!` 
+            alertBox.classList.add("_2faAlert", "alert", "alert-secondary");
+            alertBox.innerHTML = alertMsg;
+            setTimeout(redirect, 1500)
+
+            }else {
+                console.log("Reject Failed");
+            }
+        },
+        Error: function(xhr){ console.log(xhr) }
     })
-        
-    
-    </script>
-</footer>
+    }
+}
 
-    </body>
+$(function () {
+$('[data-mdb-toggle="popover"]').popover()
+})
+</script>
+</footer>
+</body>
 </html>
