@@ -1,0 +1,1 @@
+{"service":"user-service","errorStack":{"errorno":"ETIMEDOUT","code":"ETIMEDOUT","syscall":"connect","fatal":true},"level":"error","message":"Database error on connection","timestamp":"2021-04-01T07:46:26.920Z"}
