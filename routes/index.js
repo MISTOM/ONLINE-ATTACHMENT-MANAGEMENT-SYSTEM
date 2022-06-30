@@ -1,62 +1,62 @@
-const express = require("express");
-const conn = require("../lib/db");
-const passport = require("passport");
-const passportLocal = require("passport-local");
+const express = require('express');
+const conn = require('../lib/db');
+const passport = require('passport');
+const passportLocal = require('passport-local');
 
 const router = express.Router();
 
-//______________________________________________________________________
-function control(req, res, next) {
+// ______________________________________________________________________
+function control (req, res, next) {
   if (req.user === undefined) return next();
   if (req.user.role_id === 1) {
     res.redirect('/dashboard/admin');
   } else if (req.user.role_id === 2) {
-    res.redirect('/dashboard/supervisor')
+    res.redirect('/dashboard/supervisor');
   } else {
     res.redirect('/dashboard');
   }
 }
-//______________________________________________________________________
+// ______________________________________________________________________
 
-/*-----------------------------------ROUTES-- */
-router.get("/", control, (req, res, next) => {
-  res.render("index", {
-    title: "LOGIN",
+/* -----------------------------------ROUTES-- */
+router.get('/', control, (req, res, next) => {
+  res.render('index', {
+    title: 'LOGIN'
   });
 });
 
-/*_____________________________________________LOGIN AUTHENTICATION______________________________*/
-let LocalStrategy = passportLocal.Strategy;
+/* _____________________________________________LOGIN AUTHENTICATION______________________________ */
+const LocalStrategy = passportLocal.Strategy;
 
-router.post("/authentication",
-  passport.authenticate("local", {
-    successRedirect: "/dashboard",
-    failureRedirect: "/",
+router.post('/authentication',
+  passport.authenticate('local', {
+    successRedirect: '/dashboard',
+    failureRedirect: '/',
     failureFlash: true
   })
 );
 
-//------------------------PASSPORT CONFIG---
+// ------------------------PASSPORT CONFIG---
 passport.use(
   new LocalStrategy(
     {
-      usernameField: "username",
-      passwordField: "password",
+      usernameField: 'username',
+      passwordField: 'password'
       // passReqToCallback: true //pass to cb
     },
     (username, password, done) => {
       // callback with username and password from the form
-      let _name = `"${username}"`
+      const _name = `"${username}"`;
       conn.query(`SELECT * FROM users INNER JOIN user_profiles up ON users.user_id = up.user_id WHERE up.user_email =${_name}`,
         (err, rows) => {
           console.log(rows);
           if (err) return done(err);
           if (!rows.length) {
-            return done(null, false, { message: "Incorrect Username or Password! Please try again." });
+            return done(null, false, { message: 'Incorrect Username or Password! Please try again.' });
           }
-          ///////////////USER FOUND WRONG PASSWORD///////////////////
+          /// ////////////USER FOUND WRONG PASSWORD///////////////////
           if (!(rows[0].registration_number == password)) {
-            return done(null, false, { message: "Incorrect password! Please try again." });
+            return done(null, false, { message: 'Incorrect password! Please try again.' });
           } else {
             return done(null, rows[0]);
           }
@@ -74,7 +74,7 @@ passport.deserializeUser((id, done) => {
   conn.query(
     `SELECT * FROM users us INNER JOIN user_profiles up ON us.user_id = ${id} AND up.user_id = ${id} LEFT JOIN institution_info insf ON insf.student_id =${id} LEFT JOIN institution_supervisor insv ON insv.institution_id=insf.institution_id LEFT JOIN programme prg ON prg.programme_id = up.programme_id LEFT JOIN departments dept ON dept.department_id = prg.department_id LEFT JOIN school ON school.school_id = dept.school_id `,
     (err, rows) => {
-      if (err) return done(err)
+      if (err) return done(err);
       // console.log(rows)
       done(null, rows[0]);
     }
