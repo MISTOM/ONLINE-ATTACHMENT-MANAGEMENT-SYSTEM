@@ -1,5 +1,5 @@
-function control(req, res, next) {
-  if (req.user == "undefined" || req.user == undefined) {
+function control (req, res, next) {
+  if (req.user == 'undefined' || req.user == undefined) {
     res.redirect('/');
   } else {
     if (req.user.role_id === 1) {
@@ -11,4 +11,4 @@ function control(req, res, next) {
 }
 module.exports = {
   control
-}
+};
