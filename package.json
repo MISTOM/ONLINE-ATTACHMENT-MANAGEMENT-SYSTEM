@@ -1,9 +1,10 @@
 {
-  "name": "thagana",
-  "version": "0.0.0",
+  "name": "KIGARDE THAGANA",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www.js"
+    "dev": "nodemon ./bin/www.js",
+    "start":"node ./bin/www.js"
   },
   "dependencies": {
     "@supercharge/request-ip": "^1.1.2",
