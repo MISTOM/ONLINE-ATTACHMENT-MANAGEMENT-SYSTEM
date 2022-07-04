@@ -46,7 +46,6 @@ app.use(function (req, res, next) {
 /** MODULES============================================ */
 const indexRouter = require('./routes/index');
 const dashboard = require('./routes/dashboard');
-const API = require('./API/alpha');
 
 app.use('/', indexRouter);
 app.use('/dashboard', dashboard);
@@ -58,10 +57,6 @@ const getIp = (req, res, next) => {
   next();
 };
 app.use(getIp);
-
-/** API ROUTE ============================================= */
-app.use('/api', API);
-/** ======================================================= */
 
 // catch 404//
 app.use(function (req, res, next) {
